@@ -51,7 +51,9 @@ class Complexity:
         if(file_type=="arff"):
             [X,y,meta]=self.__read_file(file_name)
         else:
-            [X,y,meta]= self.read_file_data(file_name)
+            print("Only arff files are available for now")
+            return
+
         self.X=np.array(X)
         #self.X = self.X[:,0:2]
         self.y=np.array(y)
@@ -59,7 +61,7 @@ class Complexity:
 
         self.classes = classes
         self.meta=meta
-        self.dist_matrix,self.norm_dist_matrix = self.__calculate_distance_matrix(self.X,distance_func=distance_func)
+        self.dist_matrix,self.unnorm_dist_matrix = self.__calculate_distance_matrix(self.X,distance_func=distance_func)
         self.class_count = self.__count_class_instances()
 
 
@@ -83,23 +85,7 @@ class Complexity:
             class_count[i]+=count
         return class_count
 
-    '''
-    delete this
-    '''
-    def read_file_data(self,file_name):
-        data_frame = read_csv(file_name, header=None, delim_whitespace=True, names=[ 'label', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9' ] )
-        numpy_array = data_frame.to_numpy()
-        
-        num_attr = len(numpy_array[0])-1
-        X = np.array([i[1:num_attr] for i in numpy_array],dtype=float)
-        y = [i[-1] for i in numpy_array]
-        classes = np.unique(y)
-        
-        y = [np.where(classes == i[-1])[0][0] for i in numpy_array]
-        
-        meta = [0]*num_attr
-
-        return [X,y,meta]
+    
     
     
     def __read_file(self,file_name):
@@ -163,7 +149,7 @@ class Complexity:
         meta= self.meta
         
         dist_matrix=np.zeros((len(X),len(X)))
-        norm_dist_matrix = np.zeros(len(X),len(X))
+        unnorm_dist_matrix = np.zeros((len(X),len(X)))
 
         #calculate the ranges of all attributes
         range_max=np.max(X,axis=1)
@@ -173,12 +159,12 @@ class Complexity:
             for j in range(i+1,len(X)):
                 #for attribute
                 dist = 0
-                norm_dist = 0
+                unnorm_dist = 0
                 for k in range(len(X[0])):
                     #missing value
                     if(X[i][k] == None or X[j][k]==None):
                         dist+=1
-                        norm_dist+=1
+                        unnorm_dist+=1
                     #numerical
                     if(meta[k]==0):
                         #dist+=(abs(X[i][k]-X[j][k]))**2
@@ -186,24 +172,24 @@ class Complexity:
                         #dist+=(abs(X[i][k]-X[j][k])/(range_max[k]-range_min[k]))**2
                         if(range_max[k]-range_min[k]==0):
                             dist+=(abs(X[i][k]-X[j][k]))**2
-                            norm_dist+=(abs(X[i][k]-X[j][k]))**2
+                            unnorm_dist+=(abs(X[i][k]-X[j][k]))**2
                         else:
                             dist+=(abs(X[i][k]-X[j][k])/(range_max[k]-range_min[k]))**2
-                            norm_dist+= abs(X[i][k]-X[j][k])
+                            unnorm_dist+= abs(X[i][k]-X[j][k])
                             #dist+=(abs(X[i][k]-X[j][k]))**2
                     #categorical
                     if(meta[k]==1):
                         if(X[i][k]!=X[j][k]):
                             dist+=1
-                            norm_dist+=1
+                            unnorm_dist+=1
 
                 dist_matrix[i][j]=np.sqrt(dist)
                 dist_matrix[j][i]=np.sqrt(dist)
 
-                norm_dist_matrix[i][j]=np.sqrt(norm_dist)
-                norm_dist_matrix[j][i]=np.sqrt(norm_dist)
+                unnorm_dist_matrix[i][j]=np.sqrt(unnorm_dist)
+                unnorm_dist_matrix[j][i]=np.sqrt(unnorm_dist)
         #print(dist_matrix)
-        return dist_matrix,norm_dist_matrix
+        return dist_matrix,unnorm_dist_matrix
 
     def __distance_HEOM_different_arrays(self,X,X2):
         '''
@@ -251,38 +237,7 @@ class Complexity:
         #print(dist_matrix)
         return dist_matrix
 
-    #delete this function
-    import typing as t
-    def _calc_norm_dist_mat(
-        self,
-        N: np.ndarray,
-        metric: str = "minkowski",
-        p: t.Union[int, float] = 2,
-        N_scaled: t.Optional[np.ndarray] = None,
-        normalize: bool = False,
-        return_scalers: bool = False,
-    ) -> np.ndarray:
-     
-        if N_scaled is None:
-            N_scaled = self._scale_N(N=N)
-            #N_scaled = N
-
-        norm_dist_mat = scipy.spatial.distance.cdist(
-            N_scaled, N_scaled, metric=metric, p=p
-        )
-
-        orig_dist_mat_min = np.min(norm_dist_mat)
-        orig_dist_mat_ptp = np.ptp(norm_dist_mat)
-        
-        if normalize and np.not_equal(0.0, orig_dist_mat_ptp):
-            norm_dist_mat = (
-                norm_dist_mat - orig_dist_mat_min
-            ) / orig_dist_mat_ptp
-
-        if return_scalers:
-            return norm_dist_mat, orig_dist_mat_min, orig_dist_mat_ptp
-        #print(norm_dist_mat)
-        return norm_dist_mat
+    
 
 
 
@@ -304,13 +259,13 @@ class Complexity:
         --------
         '''
         if(distance_func=="HEOM"):
-            distance_matrix=self.__distance_HEOM(X)
-        if(distance_func=="default"):
-            distance_matrix=self._calc_norm_dist_mat(N=X)
+            distance_matrix,unnorm_distance_matrix=self.__distance_HEOM(X)
+        elif(distance_func=="default"):
+            distance_matrix,unnorm_distance_matrix=self.__distance_HEOM(X)
         
         #add other distance functions
 
-        return distance_matrix
+        return distance_matrix,unnorm_distance_matrix
 
     
 
@@ -387,18 +342,25 @@ class Complexity:
         n_plus (int): The number of instances that have the same class label than sample x
         --------
         '''
-        
+     
         if(len(distance_matrix)==0):
+          
             distance_matrix=self.dist_matrix
+          
         if(len(y)==0):
             y=self.y
         
+
+       
         #an array containing the distance to all points
         line = distance_matrix[inx]
+        
         n_minus = 0
         n_plus = 0
         for i in range(len(line)):
             #if the sample is inside de hypersphere
+           
+            #print(line)
             if(line[i]<=sigma):
                 #if the sample is from the same class as "x"
                 if(y[i]==y[inx]):
@@ -661,7 +623,7 @@ class Complexity:
                 sample_c2_y = self.y[self.class_inxs[j2]]
                 new_X = np.concatenate([sample_c1,sample_c2],axis=0)
                 new_y = np.concatenate([sample_c1_y,sample_c2_y],axis=0)
-                new_dist_matrix = self.__calculate_distance_matrix(new_X,distance_func=distance_func)
+                new_dist_matrix,_ = self.__calculate_distance_matrix(new_X,distance_func=distance_func)
                 
 
                 
@@ -1076,7 +1038,7 @@ class Complexity:
         nearest_oposite_class_array (numpy.array): an array with the indexes of the nearest sample of the opposite class for every sample in X
         nearest_oposite_class_dist_array (numpy.array): an array with the distances of the nearest sample of the opposite class for every sample in X
         '''
-        if(self.dist_matrix==[]):
+        if(len(dist_matrix)==0):
             dist_matrix=self.dist_matrix
 
         nearest_oposite_class_array=[]
@@ -1152,49 +1114,37 @@ class Complexity:
             var=True
         return var
               
-    #change this func
-    def __remove_overlapped_spheres(self,centers,radius):
+    
+    def __remove_overlapped_spheres(self,radius):
         '''
         Remove all the hyperspheres that are completely contained inside another.
         ------
         Parameters: 
-        centers (numpy.array): An array contaning the centers of the hyperspheres, corresponds to a scaled version of X
-        in the context of being called by T1
         radius (numpy.array): An array containing the radius of all the hyperspheres.
         ------
         Returns:
         sphere_inst_num (numpy.array): An array containing the number of hyperspheres completely inside each hypersphere, if during the execution
         of this function an hypersphere was found to be completly inside another then its count will be 0.
         '''
-        sorted_sphere_inds = np.argsort(radius)
-        sphere_inst_num = np.ones(len(centers), dtype=int)
+        
+        
+        inx_sorted = np.argsort(radius)
+        inst_per_sphere = np.ones(len(self.X), dtype=int)
 
-        for ind_a, ind_sphere_a in enumerate(sorted_sphere_inds[:-1]):
+        for inx1, inx1_sphere in enumerate(inx_sorted[:-1]):
             
            
-            for ind_sphere_b in sorted_sphere_inds[:ind_a:-1]:
+            for inx2_sphere in inx_sorted[:inx1:-1]:
                 
-                if (self.__is_inside(centers[ind_sphere_a],centers[ind_sphere_b],radius[ind_sphere_a],radius[ind_sphere_b])):
+                if (self.__is_inside(self.X[inx1_sphere],self.X[inx2_sphere],radius[inx1_sphere],radius[inx2_sphere])):
                    
-                    sphere_inst_num[ind_sphere_b] += sphere_inst_num[ind_sphere_a]
-                    sphere_inst_num[ind_sphere_a] = 0
+                    inst_per_sphere[inx2_sphere] += inst_per_sphere[inx1_sphere]
+                    inst_per_sphere[inx2_sphere] = 0
                     break
 
-        return sphere_inst_num    
+        return inst_per_sphere    
 
-    #delete this
-    def _scale_N(self,N: np.ndarray) -> np.ndarray:
-        """Scale all features of N to [0, 1] range."""
-        N_scaled = N
-      
-        if not np.allclose(1.0, np.max(N, axis=0)) or not np.allclose(
-            0.0, np.min(N, axis=0)
-        ):
-            N_scaled = sklearn.preprocessing.MinMaxScaler(
-                feature_range=(0, 1)
-            ).fit_transform(N)
-
-        return N_scaled
+    
 
 
     def __get_sphere_count(self):
@@ -1210,7 +1160,7 @@ class Complexity:
         '''
 
         #find the nearest sample of the opposite class for every sample in X.
-        e_ind,e_dist = self.__find_nearest_oposite_class_all(dist_matrix=self.norm_dist_matrix)
+        e_ind,e_dist = self.__find_nearest_oposite_class_all(dist_matrix=self.unnorm_dist_matrix)
         #print(e_dist)
         #print(nearest_enemy_dist)
         
@@ -1224,12 +1174,12 @@ class Complexity:
             if radius[ind] < 0.0:
                 self.__find_spheres(ind,e_ind,e_dist,radius)
         
-        scaled_X = self._scale_N(self.X)
+        
         sphere_inst_count = np.array([])
         ordered_radius = np.array([])
 
         #remove the hyperspheres that are complety inside another hypersphere.
-        sphere_inst_count=self.__remove_overlapped_spheres(scaled_X,radius)
+        sphere_inst_count=self.__remove_overlapped_spheres(radius)
         #print(scaled_X)
         #print(radius)
         '''
@@ -1292,7 +1242,7 @@ class Complexity:
         new_y = self.y[inx]
 
         #calculate the distance between the hypersphere centers.
-        new_dist_matrix=self.__calculate_distance_matrix(new_X,distance_func=distance_func)
+        new_dist_matrix,_ =self.__calculate_distance_matrix(new_X,distance_func=distance_func)
 
         #calculate the MST of using the hypersphere centers and find the number of vertixes linked by an edge in the MST that have a different class label
         n_inter = self.__calculate_n_inter(dist_matrix=new_dist_matrix,y=new_y)
@@ -2081,7 +2031,7 @@ complexity = Complexity("dataset/61_iris.arff",distance_func="default",file_type
 
 
 print(complexity.T1())
-'''
+
 print(complexity.R_value())
 print(complexity.D3_value())
 print(complexity.CM())
@@ -2106,17 +2056,17 @@ print(complexity.N2())
 print(complexity.N3())
 print(complexity.N4())
 print(complexity.LSC())
-'''
+
 
 #print(complexity.T1())
 
 
-'''
+
 print(complexity.F1())
 print(complexity.F1v())
 print(complexity.F2())
 print(complexity.F3())
 print(complexity.F4())
-'''
+
 
 
