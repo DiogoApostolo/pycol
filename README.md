@@ -95,7 +95,7 @@ print(complexity.purity())
 To submit bugs and feature requests, report at [project issues](https://github.com/DiogoApostolo/pycol/issues).
 
 ## Licence:
-The project is licensed under the MIT License - see the [License](/LICENSE) file for details.
+The project is licensed under the MIT License - see the [License](https://github.com/DiogoApostolo/pycol/blob/main/LICENCE) file for details.
 
 ## Acknowledgements:
 Some complexity measures implemented on `pycol` are based on the implementation of `pymfe`. We also thank José Daniel Pascual-Triana for providing the implementation of ONB.
