@@ -7,14 +7,23 @@ from pandas import read_csv
 import numpy as np
 from numpy.core.fromnumeric import shape, transpose, var
 from scipy.sparse import data
+from sklearn import datasets
 import arff
 from scipy.spatial.kdtree import distance_matrix
 
 from sklearn.cluster import KMeans
 import sklearn
+import sklearn.pipeline
 import scipy.spatial
 
 import sys
+import pandas as pd
+import csv
+
+#from sklearn.metrics import DistanceMetric
+
+from os import listdir
+from os.path import isfile, join
 
 
 
@@ -28,7 +37,7 @@ class Complexity:
     '''
     Complexity class, it makes available the following methods to calculate complexity metrics:
     F1, F1v, F2, F3, F4, R_value, D3, CM, kDN, MRCA, C1, C2, T1, DBC, N1, N2, N3, N4, SI,
-    LSC, purity, neighbourhood_seperability, input_noise, borderline, deg_overlap, ICSV, NSG and Clust
+    LSC, purity, neighbourhood_seperability, input_noise, borderline, deg_overlap, ICSV, NSG, Clust, L1, L2, L3
 
     '''
 
@@ -55,6 +64,7 @@ class Complexity:
             return
 
         self.X=np.array(X)
+        #print(self.X)
         #self.X = self.X[:,0:2]
         self.y=np.array(y)
         classes=np.unique(self.y)
@@ -107,6 +117,8 @@ class Complexity:
         data = f['data']
         num_attr = len(data[0])-1
         
+
+    
         att=f['attributes']
         meta=[]
 
@@ -117,9 +129,29 @@ class Complexity:
             else:
                 meta.append(1)
 
+
+        
+
+
+
+        # print(meta)
         #split each sample into attributes and label 
         X = [i[:num_attr] for i in data]
         y = [i[-1] for i in data]
+
+        #print(X)
+
+
+        X = np.array(X)
+        for i in range(len(meta)):
+            if meta[i]==1:
+                
+                b, c = np.unique(X[:,i], return_inverse=True)
+                X[:,i] = c
+
+        if 1 in meta:
+            X = X.astype(np.float)
+
 
         #indentify the existing classes
         classes = np.unique(y)
@@ -128,7 +160,7 @@ class Complexity:
         y = [np.where(classes == i[-1])[0][0] for i in data]
         
 
-        
+        #print(X)        
 
         return [X,y,meta]
     
@@ -152,9 +184,10 @@ class Complexity:
         unnorm_dist_matrix = np.zeros((len(X),len(X)))
 
         #calculate the ranges of all attributes
-        range_max=np.max(X,axis=1)
-        range_min=np.min(X,axis=1)
-
+        range_max=np.max(X,axis=0)
+        range_min=np.min(X,axis=0)
+        #print(range_max)
+        #print(range_min)
         for i in range(len(X)): 
             for j in range(i+1,len(X)):
                 #for attribute
@@ -170,12 +203,13 @@ class Complexity:
                         #dist+=(abs(X[i][k]-X[j][k]))**2
                         
                         #dist+=(abs(X[i][k]-X[j][k])/(range_max[k]-range_min[k]))**2
-                        if(range_max[k]-range_min[k]==0):
+                        if(range_max[k]==range_min[k]):
                             dist+=(abs(X[i][k]-X[j][k]))**2
                             unnorm_dist+=(abs(X[i][k]-X[j][k]))**2
                         else:
                             dist+=(abs(X[i][k]-X[j][k])/(range_max[k]-range_min[k]))**2
-                            unnorm_dist+= abs(X[i][k]-X[j][k])
+                            unnorm_dist+= abs(X[i][k]-X[j][k])**2
+                            
                             #dist+=(abs(X[i][k]-X[j][k]))**2
                     #categorical
                     if(meta[k]==1):
@@ -319,6 +353,19 @@ class Complexity:
         return count
     
 
+    def __knn_dists(self,inx,line,k,clear_diag=True):
+        dists = []
+        if(clear_diag):
+            line[inx]=math.inf
+        for i in range(k):
+            index=np.where(line == min(line))[0][0]
+            if(self.y[index]==self.y[inx]):
+                dists.append(line[index])
+         
+            line[index]=math.inf
+            #if(self.y[index]!=self.y[inx]):
+        
+        return dists
 
 
     def __hypersphere(self,inx,sigma,distance_matrix=[],y=[]):
@@ -423,7 +470,6 @@ class Complexity:
 
         for i in range(len(self.dist_matrix)):
             line = self.dist_matrix[i]
-
             #caclutate the k nearest neighbours of the instance
             count=self.__knn(i,copy.copy(line),k)
             cls_inx = np.where( self.classes == self.y[i])[0][0]
@@ -433,12 +479,14 @@ class Complexity:
                    
                     r_matrix[cls_inx,j]+=1
 
-
+        #print(r_matrix)
         
         for i in range(len(r_matrix)):
             for j in range(len(r_matrix[0])):
                 r_matrix[i,j]=r_matrix[i,j]/self.class_count[i]
-       
+
+
+        #print(r_matrix)
 
         r_values = []
         for i in range(len(r_matrix)):
@@ -591,7 +639,7 @@ class Complexity:
         mri_val=sum_val/len(cluster)
         return mri_val
 
-    def MRCA(self,sigmas=[0.1,0.2,0.5],n_clusters=3,distance_func="default"):
+    def MRCA(self,sigmas=[0.25,0.5,0.75],n_clusters=3,distance_func="default"):
         '''
         Calculates the MRCA value complexity measure defined in [1].
 
@@ -625,7 +673,7 @@ class Complexity:
                 new_y = np.concatenate([sample_c1_y,sample_c2_y],axis=0)
                 new_dist_matrix,_ = self.__calculate_distance_matrix(new_X,distance_func=distance_func)
                 
-
+                #print(new_dist_matrix)
                 
                 mrca=np.zeros(n_clusters)
                 profiles = np.zeros((len(new_X),len(sigmas)))
@@ -653,6 +701,7 @@ class Complexity:
                         profiles[i,j]=psi
 
                 #cluster the the profiles
+                print(profiles)
                 kmeans = KMeans(n_clusters=n_clusters).fit(profiles)
                 
 
@@ -665,7 +714,7 @@ class Complexity:
 
                 return mrca
                 
-    def C1(self,sigmas=[0.01,0.05,0.1]):
+    def C1(self,max_k=5):
         '''
         Calculate the C1 value complexity measure defined in [1].
 
@@ -684,6 +733,82 @@ class Complexity:
         c1_sum = 0
         for i in range(len(self.X)):
             c1_instance_sum = 0
+            cls_inx = np.where( self.classes == self.y[i])[0][0]
+            #for each radius sigma
+            for k in range(1,max_k+1):
+                #draw a hypersphere with radius sigma around the point and check which points inside are from the same class and
+                #which are not.
+                #n = self.__hypersphere(i,sigma)
+                
+                count=self.__knn(i,copy.copy(self.dist_matrix[i]),k)
+               
+                pkj=count[cls_inx]/k
+                c1_instance_sum += pkj
+
+            c1_instance_val = 1-(c1_instance_sum/max_k)
+            c1_sum += c1_instance_val
+        c1_val = c1_sum/len(self.X)
+
+        return c1_val
+
+    def C1_imb(self,max_k=5):
+        '''
+        Calculate the C1 value complexity measure defined in [1].
+
+        -------
+        Parameters:
+        sigmas (float): An array with the multiple hypersphere radius
+        -------
+        Returns:
+        c1_val (float): The value of the complexity measure 
+        -------
+        References:
+
+        [1] Massie S, Craw S, Wiratunga N (2005) Complexity-guided case discovery
+        for case based reasoning. In: AAAI, vol 5, pp 216-221
+        '''
+
+        c1_sum = np.zeros(len(self.classes))
+        for i in range(len(self.X)):
+            c1_instance_sum = 0
+            cls_inx = np.where( self.classes == self.y[i])[0][0]
+            #for each radius sigma
+            for k in range(1,max_k+1):
+                #draw a hypersphere with radius sigma around the point and check which points inside are from the same class and
+                #which are not.
+                #n = self.__hypersphere(i,sigma)
+                
+                count=self.__knn(i,copy.copy(self.dist_matrix[i]),k)
+               
+                pkj=count[cls_inx]/k
+                c1_instance_sum += pkj
+
+            c1_instance_val = 1-(c1_instance_sum/max_k)
+            c1_sum[cls_inx] += c1_instance_val
+        c1_val = np.divide(c1_sum,self.class_count)
+
+        return c1_val
+    
+    def C1_old(self,sigmas=[0.01,0.05,0.1]):
+        '''
+        Calculate the C1 value complexity measure defined in [1].
+
+        -------
+        Parameters:
+        sigmas (float): An array with the multiple hypersphere radius
+        -------
+        Returns:
+        c1_val (float): The value of the complexity measure 
+        -------
+        References:
+
+        [1] Massie S, Craw S, Wiratunga N (2005) Complexity-guided case discovery
+        for case based reasoning. In: AAAI, vol 5, pp 216-221
+        '''
+
+        c1_sum = 0
+        for i in range(len(self.X)):
+            c1_instance_sum = 0
 
             #for each radius sigma
             for sigma in sigmas:
@@ -697,8 +822,67 @@ class Complexity:
         c1_val = c1_sum/len(self.X)
 
         return c1_val
-    
-    def C2(self,sigmas=[0.1,0.2,0.5]):
+
+
+    def C2(self,max_k=5):
+        c2_sum = 0
+        for i in range(len(self.X)):
+            c2_instance_sum = 0
+
+            #for each radius sigma
+            for k in range(1,max_k+1):
+                #draw a hypersphere with radius sigma around the point and check which points inside are from the same class and
+                #which are not.
+                #n = self.__hypersphere(i,sigma)
+                
+                dists=self.__knn_dists(i,copy.copy(self.dist_matrix[i]),k)
+            
+                pkj = 0
+                for d in dists:
+                    pkj+=1-d
+                pkj/= k
+
+                #cls_inx = np.where( self.classes == self.y[i])[0][0]
+                #pkj=count[cls_inx]/k
+                c2_instance_sum += pkj
+
+            c2_instance_val = 1-(c2_instance_sum/max_k)
+            c2_sum += c2_instance_val
+        c2_val = c2_sum/len(self.X)
+
+        return c2_val
+
+
+    def C2_imb(self,max_k=5):
+        c2_sum = np.zeros(len(self.classes))
+        for i in range(len(self.X)):
+            c2_instance_sum = 0
+            cls_inx = np.where( self.classes == self.y[i])[0][0]
+            #for each radius sigma
+            for k in range(1,max_k+1):
+                #draw a hypersphere with radius sigma around the point and check which points inside are from the same class and
+                #which are not.
+                #n = self.__hypersphere(i,sigma)
+                
+                dists=self.__knn_dists(i,copy.copy(self.dist_matrix[i]),k)
+            
+                pkj = 0
+                for d in dists:
+                    pkj+=1-d
+                pkj/= k
+
+                #cls_inx = np.where( self.classes == self.y[i])[0][0]
+                #pkj=count[cls_inx]/k
+                c2_instance_sum += pkj
+
+            c2_instance_val = 1-(c2_instance_sum/max_k)
+            c2_sum[cls_inx] += c2_instance_val
+        c2_val = np.divide(c2_sum,self.class_count)
+
+        return c2_val
+
+
+    def C2_old(self,sigmas=[0.1,0.2,0.5]):
         '''
         Calculate the C2 value complexity measure defined in [1].
 
@@ -730,7 +914,7 @@ class Complexity:
         c2_val = c2_sum/len(self.X)
         return c2_val
 
-    def __calculate_n_inter(self,dist_matrix=[],y=[]):
+    def __calculate_n_inter(self,dist_matrix=[],y=[],imb=False):
         '''
         Called by the DBC and N1 complexity measure functions.
         Calculates the miminimum spanning tree using a distance matrix, dist_matrix. Afterwards it counts the amount
@@ -776,9 +960,31 @@ class Complexity:
                         vertix.append(i)
                         vertix.append(j)
 
-        count=len(np.unique(vertix))
-       
+        unique_vertix = np.unique(vertix)
+
+        #---------------------------
+
+        
+        #----------------------------
+        if(imb==False):
+            count=len(unique_vertix)
+
+            
+        else:
+            count = np.zeros(len(self.classes))
+            for inx in unique_vertix:
+                cls_inx = np.where( self.classes == self.y[inx])[0][0]
+                count[cls_inx]+=1
+
+
         return count
+
+    def N1_imb(self):
+        count = self.__calculate_n_inter(imb=True)
+        #print(count)
+        n1 = np.divide(count,self.class_count)
+        return n1
+
     def N1(self):
         '''
         Calculate the N1 value complexity measure defined in [1].
@@ -793,8 +999,35 @@ class Complexity:
         problems. IEEE transactions on pattern analysis and machine intelligence 24(3):289-300
         '''
         count = self.__calculate_n_inter()
+        #print(count)
         n1 = count/len(self.y)
         return n1
+    
+    def N2_imb(self):
+        count_inter = np.zeros(len(self.classes))
+        count_intra = np.zeros(len(self.classes))
+
+
+        #for each sample
+        for i in range(len(self.dist_matrix)):
+            min_inter = np.inf
+            min_intra = np.inf
+
+            #iterate over every sample and check which is the nearest neighbour from the same class and
+            #which is the nearest neighbour from the opposite class.
+            for j in range(len(self.dist_matrix[0])):
+                if(self.y[i]==self.y[j] and i!=j and self.dist_matrix[i][j]<min_intra):
+                    min_intra=self.dist_matrix[i][j]
+                if(self.y[i]!=self.y[j] and self.dist_matrix[i][j]<min_inter):
+                    min_inter=self.dist_matrix[i][j]
+
+            cls_inx = np.where( self.classes == self.y[i])[0][0]
+            count_inter[cls_inx]+=min_inter
+            count_intra[cls_inx]+=min_intra
+        r = np.divide(count_intra,count_inter)
+
+        N2 = np.divide(r,(1+r))
+        return N2
 
     def N2(self):
         '''
@@ -868,8 +1101,43 @@ class Complexity:
         n3 = sample_count/len(self.y)
         return n3
     
+    #todo: change comments
+    def N3_imb(self,k=1):
+        '''
+        Calculate the N3 value complexity measure in [1].
+        By default k=1 in accordance to the definition in the paper. However it is possible to select a different value for k.
+        -------
+        Parameters:
+        k (int): number of nearest neighbours to consider
+        -------
+        Returns:
+        n3 (float): the value of the complexity measure 
+        -------
+        References: 
+
+        Ho T, Basu M (2002) Complexity measures of supervised classification
+        problems. IEEE transactions on pattern analysis and machine intelligence 24(3):289-300
+        ''' 
+        n3_counts=np.zeros(len(self.classes))
+        #sample_count=0
+        #for each sample
+        for sample in range(len(self.X)):
+            #calculate the nearest neighbour
+            count=self.__knn(sample,copy.copy(self.dist_matrix[sample]),k)
+            cls_inx = np.where( self.classes == self.y[sample])[0][0]
+            
+            
+            class_count=count[cls_inx]
+            max_count=np.max(count)
+            #are there more instances with the same class label or with a different class label. 
+            if(class_count<max_count):
+                #sample_count+=1
+                n3_counts[cls_inx]+=1
+        n3 = np.divide(n3_counts,self.class_count)
+        #n3 = sample_count/len(self.y)
+        return n3
     
-    def __interpolate_samples(self):
+    def __interpolate_samples(self,class_inxs=[]):
         '''
         Create new interpolated samples from the sample array X.
         To achieve this 2 samples in X from the same class are selected and a new sample is created by interpolating these 2.
@@ -880,10 +1148,13 @@ class Complexity:
         X_interp (array): The new array with the interpolated samples
         y_inter (array): An array with the labels of the new class samples.
         '''
+
+        if(len(class_inxs)==0):
+            class_inxs = self.class_inxs
         
         X_interp = []
         y_interp = []
-        for cls_inx in self.class_inxs:
+        for cls_inx in class_inxs:
             new_X = self.X[cls_inx,:]
             new_y = self.y[cls_inx]
             sample1_inxs = np.random.choice( len(new_X),  len(new_X))
@@ -956,11 +1227,61 @@ class Complexity:
             max_count=np.max(count)
             if(class_count<max_count):
                 sample_count+=1
+                
 
         n4 = sample_count/len(y_interp)
         return n4
-        
+    
 
+    #todo change this
+    def N4_imb(self,k=1):
+        '''
+        Calculate the N4 value complexity measure defined in [1].
+        -------
+        Parameters:
+        k (int): Number of nearest neighbours to consider
+        -------
+        Returns:
+        n4 (float): The value of the complexity measure 
+        -------
+        References:
+
+        [1] Lorena AC, Garcia LP, Lehmann J, Souto MC, Ho TK (2019) How complex
+        is your classification problem? a survey on measuring classification
+        complexity. ACM Computing Surveys (CSUR) 52(5):1-34
+        '''
+
+
+        #create new interpolated samples
+        X_interp, y_interp=self.__interpolate_samples()
+        
+       
+       
+
+        new_dist = self.__distance_HEOM_different_arrays(self.X,X_interp)
+
+        #sample_count=0
+        n4_counts=np.zeros(len(self.classes))
+        #for each sample in X_interpol check calculate their k nearest neighbours in X and determine if there
+        #are more neighbours from the same class or more neighbours from the opposite classes.
+        for sample in range(len(X_interp)):
+            
+            
+            count=self.__knn(sample,copy.copy(new_dist[sample]),k,clear_diag=False)
+            cls_inx = np.where( self.classes == y_interp[sample])[0][0]
+            
+            #number of neighbours with the same class label
+            class_count=count[cls_inx]
+
+            
+            max_count=np.max(count)
+            if(class_count<max_count):
+                #sample_count+=1
+                n4_counts[cls_inx]+=1
+        n4 = np.divide(n4_counts,self.class_count)
+
+        #n4 = sample_count/len(y_interp)
+        return n4
         
        
     
@@ -1110,10 +1431,35 @@ class Complexity:
         var (bool): True if hypersphere a is inside hypersphere b, false if not.
         '''
         var = False
-        if(sum(np.square(center_a-center_b)) < (radius_b-radius_a)**2):
+        '''
+        print("--------------")
+        print(center_a)
+        print(radius_a)
+        print(center_b)
+        print(radius_b)
+        print(np.sqrt(sum(np.square(center_a-center_b))) - (radius_b-radius_a))
+        print("------------")
+        '''
+       
+
+       
+        if(abs(np.sqrt(sum(np.square(center_a-center_b))) - (radius_b-radius_a))<0.01):
+            
             var=True
         return var
-              
+
+    def _scale_N(self,N: np.ndarray) -> np.ndarray:
+        """Scale all features of N to [0, 1] range."""
+        N_scaled = N
+
+        if not np.allclose(1.0, np.max(N, axis=0)) or not np.allclose(
+            0.0, np.min(N, axis=0)
+        ):
+            N_scaled = sklearn.preprocessing.MinMaxScaler(
+                feature_range=(0, 1)
+            ).fit_transform(N)
+
+        return N_scaled  
     
     def __remove_overlapped_spheres(self,radius):
         '''
@@ -1127,7 +1473,8 @@ class Complexity:
         of this function an hypersphere was found to be completly inside another then its count will be 0.
         '''
         
-        
+        X = self._scale_N(self.X)
+        #X = self.X
         inx_sorted = np.argsort(radius)
         inst_per_sphere = np.ones(len(self.X), dtype=int)
 
@@ -1136,8 +1483,10 @@ class Complexity:
            
             for inx2_sphere in inx_sorted[:inx1:-1]:
                 
-                if (self.__is_inside(self.X[inx1_sphere],self.X[inx2_sphere],radius[inx1_sphere],radius[inx2_sphere])):
-                   
+                if (self.__is_inside(X[inx1_sphere],X[inx2_sphere],radius[inx1_sphere],radius[inx2_sphere])):
+                    #print("FOUND")
+                    #print(X[inx1_sphere])
+                    #print(X[inx2_sphere])
                     inst_per_sphere[inx2_sphere] += inst_per_sphere[inx1_sphere]
                     inst_per_sphere[inx2_sphere] = 0
                     break
@@ -1160,7 +1509,9 @@ class Complexity:
         '''
 
         #find the nearest sample of the opposite class for every sample in X.
-        e_ind,e_dist = self.__find_nearest_oposite_class_all(dist_matrix=self.unnorm_dist_matrix)
+        e_ind,e_dist = self.__find_nearest_oposite_class_all(dist_matrix=self.dist_matrix)
+        #print(self.X)
+        #print(self.unnorm_dist_matrix)
         #print(e_dist)
         #print(nearest_enemy_dist)
         
@@ -1209,6 +1560,7 @@ class Complexity:
         complexity. ACM Computing Surveys (CSUR) 52(5):1-34
         '''
         sphere_inst_count,radius=self.__get_sphere_count()
+        print(radius)
         t1 = len(sphere_inst_count[sphere_inst_count > 0])/ len(self.y)
         
         #t1 = sum(sphere_inst_count[sphere_inst_count > 0]) / len(self.y)))/len(sphere_inst_count[sphere_inst_count > 0])
@@ -1452,6 +1804,12 @@ class Complexity:
             #(max of the feature - min of the feature)/(num of intervals +1)
             min_feature = min(transpose_X[j])
             max_feature = max(transpose_X[j])
+
+          
+            
+           
+
+              
             step = (max_feature-min_feature)/(resolution+1)
             steps.append(step)
             #calculate the hypercube bounds for each dimension
@@ -1460,7 +1818,7 @@ class Complexity:
         
 
         #print(feature_bounds)
-        
+       
         sample_dic = {}
         #map each cell to the cell it belongs to (sample->cell)
         for s in range(len(self.X)):
@@ -1475,8 +1833,21 @@ class Complexity:
                             sample_dic[str(s)]+="-"+str(k)
                         break
         
-    
         
+        
+        '''
+        for f in feature_bounds[1]:
+            plt.axhline(y=f, color='r', linestyle='-')
+
+        for f in feature_bounds[0]:
+            plt.axvline(x=f, color='r', linestyle='-')
+
+        
+        for inx in self.class_inxs:
+            plt.plot(self.X[inx,0],self.X[inx,1],"o",markersize=4)
+        plt.show()
+        '''
+
         #reverse the mapping (cell->sample)
         reverse_dic = {}
         for k,v in sample_dic.items():
@@ -1487,7 +1858,7 @@ class Complexity:
             else:
                 reverse_dic[v].append(int(k)) 
 
-        #print(reverse_dic)
+        
         return reverse_dic
 
 
@@ -1517,6 +1888,7 @@ class Complexity:
             purity = 0
             #calculate purity
             for cell in reverse_dic:
+                
                 classes = self.classes
                 class_counts = [0]*len(classes)
                 num_classes = len(classes)
@@ -1525,28 +1897,29 @@ class Complexity:
                 for label in reverse_dic[cell]:
                     class_counts[np.where(classes==label)[0][0]]+=1
                 class_sum=0
-                
+                #print(class_counts)
                 #sum the values on each cell
                 for count in class_counts:
                     class_sum+=((count/sum(class_counts))-(1/num_classes))**2
-                    np.where(classes==label)
-                
+                    
+               
 
                 cell_purity = math.sqrt((num_classes/(num_classes-1))*class_sum)
+                
+                
                 purity+=cell_purity*(sum(class_counts))/len(self.X)
             purities.append(purity)
-        #print(purities)
+        
         w_purities = []
         for i in range(len(purities)):
             new_p = purities[i]*(1/2**(i))
             w_purities.append(new_p)
-        #print(w_purities)
-
-        norm_resolutions = [x/max_resolution for x in list(range(max_resolution))]
         
-
-        auc=sklearn.metrics.auc(norm_resolutions,w_purities)
-        return auc
+        norm_resolutions = [x/max_resolution for x in list(range(max_resolution))]
+        norm_purities = [(x-min(w_purities))/(max(w_purities)-min(w_purities)) for x in w_purities]
+        print(norm_purities)
+        auc=sklearn.metrics.auc(norm_resolutions,norm_purities)
+        return auc/0.702
     
 
     #only for datasets with no categorical features
@@ -1786,6 +2159,40 @@ class Complexity:
         return f3s
     
 
+    def F3_imb(self):
+        f3s=[]
+
+
+        #one vs one method
+        for i in range(len(self.class_inxs)):
+            for j in range(i+1,len(self.class_inxs)):
+                sample_c1 = self.X[self.class_inxs[i]]
+                sample_c2 = self.X[self.class_inxs[j]]
+
+                maxmin = np.max([np.min(sample_c1,axis=0),np.min(sample_c2,axis=0)],axis=0)
+                minmax = np.min([np.max(sample_c1,axis=0),np.max(sample_c2,axis=0)],axis=0)
+
+                transpose_X = np.transpose(self.X)
+
+                overlap_count = []
+
+                #for every feature
+                for k in  range(len(transpose_X)):
+                    feature = transpose_X[k]
+                    count = 0
+
+                    #for every sample
+                    for value in feature:
+                        #check if the sample is inside the bounds
+                        if(value>=maxmin[k] and value<=minmax[k]):
+                            count+=1
+                    overlap_count.append(count)
+            
+
+                min_overlap = min(overlap_count)
+                f3 = min_overlap/(len(self.X[self.class_inxs[i]])+len(self.X[self.class_inxs[j]]))
+                f3s.append(f3)
+        return f3s
     #only for datasets with no categorical features
     def F4(self):
         '''
@@ -2012,7 +2419,7 @@ class Complexity:
         References:
 
         [1] Mercier M, Santos M, Abreu P, Soares C, Soares J, Santos J (2018)
-        Analysing the footprint of classiers in overlapped and imbalanced con-
+        Analysing the footprint of classifiers in overlapped and imbalanced con-
         texts. In: International Symposium on Intelligent Data Analysis, Springer,
         pp 200-212
         '''
@@ -2024,6 +2431,273 @@ class Complexity:
                 deg+=1
         deg_ov = deg/len(self.X)
         return deg_ov
+
+    # -*- coding: utf-8 -*-
+
+
+    def l1(self):
+
+ 
+        scaler = sklearn.preprocessing.StandardScaler()
+        svc = sklearn.svm.LinearSVC(penalty="l2",loss="hinge",C=2.0,tol=10e-3,max_iter=1000,random_state=0)
+        
+        svc_pipeline = sklearn.pipeline.Pipeline([("scaler", scaler), ("svc", svc)])
+        sum_err_dist = []
+
+        for i in range(len(self.class_inxs)):
+            for j in range(i+1,len(self.class_inxs)):
+    
+                valid_inxs_c1 = self.class_inxs[i]
+                valid_inxs_c2 = self.class_inxs[j]
+                sample_c1 = self.X[valid_inxs_c1]
+                sample_c2 = self.X[valid_inxs_c2]
+
+                l_c1 = self.y[valid_inxs_c1]
+                l_c2 = self.y[valid_inxs_c2]
+
+                sub_X = np.concatenate((sample_c1,sample_c2))
+                sub_y = np.concatenate((l_c1,l_c2))
+
+                svc_pipeline.fit(sub_X,sub_y)
+
+                y_pred = svc_pipeline.predict(sub_X)
+                misclassified_insts = sub_X[y_pred != sub_y, :]
+
+                if misclassified_insts.size:
+                    insts_dists = svc_pipeline.decision_function(misclassified_insts)
+                else:
+                    insts_dists = np.array([0.0], dtype=float)
+
+                sum_err_dist.append(np.linalg.norm(insts_dists, ord=1) / (len(sub_y)))
+
+        sum_err_dist = np.array(sum_err_dist)
+        l1 = 1.0 - 1.0 / (1.0 + sum_err_dist)
+        return l1
+
+    def l2(self):
+        print("bruh")
+        scaler = sklearn.preprocessing.StandardScaler()
+        svc = sklearn.svm.LinearSVC(penalty="l2",loss="hinge",C=2.0,tol=10e-3,max_iter=1000,random_state=0)
+        
+        svc_pipeline = sklearn.pipeline.Pipeline([("scaler", scaler), ("svc", svc)])
+        l2 = []
+
+        for i in range(len(self.class_inxs)):
+            for j in range(i+1,len(self.class_inxs)):
+    
+                valid_inxs_c1 = self.class_inxs[i]
+                valid_inxs_c2 = self.class_inxs[j]
+                sample_c1 = self.X[valid_inxs_c1]
+                sample_c2 = self.X[valid_inxs_c2]
+
+                l_c1 = self.y[valid_inxs_c1]
+                l_c2 = self.y[valid_inxs_c2]
+
+                sub_X = np.concatenate((sample_c1,sample_c2))
+                sub_y = np.concatenate((l_c1,l_c2))
+
+                svc_pipeline.fit(sub_X,sub_y)
+
+                y_pred = svc_pipeline.predict(sub_X)
+
+                error = sklearn.metrics.zero_one_loss(y_true=sub_y, y_pred=y_pred, normalize=True)
+
+                l2.append(error)
+        
+        return l2
+
+    def l3(self):
+
+        scaler = sklearn.preprocessing.StandardScaler()
+        svc = sklearn.svm.LinearSVC(penalty="l2",loss="hinge",C=2.0,tol=10e-3,max_iter=1000,random_state=0)
+        
+        svc_pipeline = sklearn.pipeline.Pipeline([("scaler", scaler), ("svc", svc)])
+        l3 = []
+
+
+        
+        for i in range(len(self.class_inxs)):
+            for j in range(i+1,len(self.class_inxs)):
+    
+                valid_inxs_c1 = self.class_inxs[i]
+                valid_inxs_c2 = self.class_inxs[j]
+                sample_c1 = self.X[valid_inxs_c1]
+                sample_c2 = self.X[valid_inxs_c2]
+
+                l_c1 = self.y[valid_inxs_c1]
+                l_c2 = self.y[valid_inxs_c2]
+
+                sub_X = np.concatenate((sample_c1,sample_c2))
+                sub_y = np.concatenate((l_c1,l_c2))
+                
+                svc_pipeline.fit(sub_X, sub_y)
+                
+                
+                valid_inxs = []
+                valid_inxs.append(valid_inxs_c1)
+                valid_inxs.append(valid_inxs_c2)
+               
+                X_interp, y_interp=self.__interpolate_samples(class_inxs=valid_inxs)
+          
+
+                y_pred = svc_pipeline.predict(X_interp)
+
+                error = sklearn.metrics.zero_one_loss(y_true=y_interp, y_pred=y_pred, normalize=True)
+
+                l3.append(error)
+
+
+        return l3
+
+
+
+
+
+    def ONB_avg(self,dist_id = "manhattan"):
+
+        """
+
+        ONB complexity metric differentiating (averaged) by class
+
+        dataset is the dataframe of the dataset that will be evaluated, where the last column is the class
+
+        dist_id is the type of distance metric that will be utilised (with "manhattan" as the default metric, but "euclidean" was also used in the study)
+
+        """
+        featu = pd.DataFrame(self.X) #feature part of the dataframe
+        
+        clas = pd.DataFrame(self.y) #class part of the dataframe
+        
+        clas.rename(columns = {0 : 'class'}, inplace = True)
+        
+        dataset = featu.join(clas)
+
+        clas_dif = np.unique(clas) #array of the different clases in the dataset   
+
+        dist= 0 #DistanceMetric.get_metric(dist_id) #indicating which distance metric will be used    
+
+        dtf_dist =  pd.DataFrame(dist.pairwise(featu)) #distance matrix as a dataframe    
+
+        lista_el_cla = [] #empty list for the elements of each class
+
+        el_cla = [] #empty list for the number of elements in each class
+
+        for cla in clas_dif:
+
+            lista_el_cla = lista_el_cla + [list(dataset.loc[dataset["class"]==cla].index.values)] #add the elements of each class
+
+            el_cla = el_cla + [len(list(dataset.loc[dataset["class"]==cla].index.values))] #add the number of elements in each class
+
+        cl=0 #counter for the classes, starting at 0
+
+        avg=0 #variable where the ratios of balls per number of elements of each class will be added, and later averaged
+
+        for cla in clas_dif: #for each class
+
+            bolascla=0 #counter for the number of balls necessary for class coverage 
+
+            falta = lista_el_cla[cl] #list of uncovered instances of that class, which initially includes all elements of said class
+
+            while len(falta)!=0: #while there are uncovered elements of said class
+
+                bolaslist=[] #empty list for the elements of the ball that covers the most instances for this iteration
+
+                for j in falta: #for each uncovered element
+
+                    mininter = min(dtf_dist.loc[j,dataset["class"]!=cla]) #the biggest possible radius that does not cover elements from other classes is computed
+
+                    s=dtf_dist.iloc[j, falta]<mininter #the instances included in that ball are obtained
+
+                    bolas = [falta.index(i) for i in s[s].index.values] #said instances are saved as a list
+
+                    if len(bolas) > len(bolaslist): #if this ball covers more instances than the previous best candidate
+
+                        bolaslist = bolas #its covered elements are saved
+
+                bolascla+=1 #the total of chosen balls for the coverage of said class increases by 1
+
+                for ele in sorted(bolaslist, reverse = True): 
+
+                    del falta[ele] #the elements covered by chosen ball are deleted from the list of uncovered instances 
+
+            avg += (bolascla / el_cla[cl]) #the ratio between the number of balls necessary to cover the points of a class and the number of points of that class is added to the sum
+
+            cl+=1 #continue to the next class
+
+        return avg / len(clas_dif) #return the average of the ratios between the number of balls necessary to cover the points of a class and the number of points of that class
+
+
+
+
+
+    def ONB_tot(self, dist_id = "manhattan"):
+
+        """
+
+        ONB complexity metric using the total number of balls
+
+        dataset is the dataframe of the dataset that will be evaluated, where the last column is the class
+
+        dist_id is the type of distance metric that will be utilised (with "manhattan" as the default metric, but "euclidean" was also used in the study)
+
+        """
+        
+        featu = pd.DataFrame(self.X) #feature part of the dataframe
+        print(featu)
+        clas = pd.DataFrame(self.y) #class part of the dataframe
+        
+        clas.rename(columns = {0 : 'class'}, inplace = True)
+        print(clas)
+        dataset = featu.join(clas)
+
+        print(dataset)
+        tam = dataset.shape[0] #number of instances of the dataframe
+
+        clas_dif = np.unique(clas) #array of the different clases in the dataset   
+
+        dist= 0 #DistanceMetric.get_metric(dist_id) #indicating which distance metric will be used     
+
+        dtf_dist = pd.DataFrame(dist.pairwise(featu)) #distance matrix as a dataframe   
+
+        lista_el_cla = [] #empty list for the elements of each class
+
+        for cla in clas_dif:
+
+            lista_el_cla = lista_el_cla + [list(dataset.loc[dataset["class"]==cla].index.values)] #add the elements of each class
+
+        nbolas = 0 #counter for the balls necessary for the full coverage of the dataset, starting at 0
+
+        cl=0 #counter for the classes, starting at 0
+
+        for cla in clas_dif: #for each class
+
+            falta = lista_el_cla[cl] #list of uncovered instances of that class, which initially includes all elements of said class
+
+            while len(falta)!=0: #while there are uncovered elements of said class
+
+                bolaslist=[] #empty list for the elements of the ball that covers the most instances for this iteration
+
+                for j in falta: #for each uncovered element
+
+                    mininter = min(dtf_dist.loc[j,dataset["class"]!=cla]) #the biggest possible radius that does not cover elements from other classes is computed
+
+                    s=dtf_dist.iloc[j, falta]<mininter #the instances included in that ball are obtained
+
+                    bolas = [falta.index(i) for i in s[s].index.values] #said instances are saved as a list
+
+                    if len(bolas) > len(bolaslist): #if this ball covers more instances than the previous best candidate
+
+                        bolaslist = bolas #its covered elements are saved
+
+                nbolas+=1 #the total of chosen balls for the coverage increases by 1
+
+                for ele in sorted(bolaslist, reverse = True): 
+
+                    del falta[ele] #the elements covered by chosen ball are deleted from the list of uncovered instances 
+
+            cl+=1 #continue to the next class  
+
+        return nbolas / tam #return the ratio between the number of balls necessary for full coverage and the number of instances of the dataset
 
 
 
@@ -2067,6 +2741,3 @@ print(complexity.F1v())
 print(complexity.F2())
 print(complexity.F3())
 print(complexity.F4())
-
-
-
