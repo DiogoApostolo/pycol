@@ -1,33 +1,20 @@
 import copy
 import math
-from operator import itemgetter, ne
-from typing import overload
-from numpy.core.numerictypes import ScalarType
-from pandas import read_csv
+from operator import itemgetter
 import numpy as np
 from numpy.core.fromnumeric import shape, transpose, var
-from scipy.sparse import data
-from sklearn import datasets
 import arff
-from scipy.spatial.kdtree import distance_matrix
-
 from sklearn.cluster import KMeans
 import sklearn
 import sklearn.pipeline
 import scipy.spatial
-
-import sys
 import pandas as pd
-import csv
-
-#from sklearn.metrics import DistanceMetric
-
-from os import listdir
-from os.path import isfile, join
 
 
 
-np.random.seed(0)
+
+
+
 
 
 
@@ -141,7 +128,7 @@ class Complexity:
 
         #print(X)
 
-
+        #convert categorical features to ordinal
         X = np.array(X)
         for i in range(len(meta)):
             if meta[i]==1:
@@ -789,39 +776,7 @@ class Complexity:
 
         return c1_val
     
-    def C1_old(self,sigmas=[0.01,0.05,0.1]):
-        '''
-        Calculate the C1 value complexity measure defined in [1].
-
-        -------
-        Parameters:
-        sigmas (float): An array with the multiple hypersphere radius
-        -------
-        Returns:
-        c1_val (float): The value of the complexity measure 
-        -------
-        References:
-
-        [1] Massie S, Craw S, Wiratunga N (2005) Complexity-guided case discovery
-        for case based reasoning. In: AAAI, vol 5, pp 216-221
-        '''
-
-        c1_sum = 0
-        for i in range(len(self.X)):
-            c1_instance_sum = 0
-
-            #for each radius sigma
-            for sigma in sigmas:
-                #draw a hypersphere with radius sigma around the point and check which points inside are from the same class and
-                #which are not.
-                n = self.__hypersphere(i,sigma)
-                pkj=n[1]/sum(n)
-                c1_instance_sum += pkj
-            c1_instance_val = 1-(c1_instance_sum/len(sigmas))
-            c1_sum += c1_instance_val
-        c1_val = c1_sum/len(self.X)
-
-        return c1_val
+    
 
 
     def C2(self,max_k=5):
@@ -882,37 +837,6 @@ class Complexity:
         return c2_val
 
 
-    def C2_old(self,sigmas=[0.1,0.2,0.5]):
-        '''
-        Calculate the C2 value complexity measure defined in [1].
-
-        -------
-        Parameters:
-        sigmas (float): An array with the multiple hypersphere radius
-        -------
-        Returns:
-        c2_val (float): The value of the complexity measure 
-        -------
-        References:
-
-        [1] Cummins L (2013) Combining and choosing case base maintenance algorithms. PhD thesis, University College Cork
-        '''
-        c2_sum = 0
-        for i in range(len(self.X)):
-            c2_instance_sum = 0
-            for sigma in sigmas:
-                n = self.__hypersphere_sim(i,sigma)
-                
-                if(sum(n)!=0):
-                    
-                    pkj=n[1]/sum(n)
-                else:
-                    pkj=1
-                c2_instance_sum += pkj
-            c2_instance_val = 1-(c2_instance_sum/len(sigmas))
-            c2_sum += c2_instance_val
-        c2_val = c2_sum/len(self.X)
-        return c2_val
 
     def __calculate_n_inter(self,dist_matrix=[],y=[],imb=False):
         '''
@@ -1758,9 +1682,11 @@ class Complexity:
         
 
         #calculate the density of each hypersphere
+        n = len(self.class_inxs)
         density = []
         for i in range(len(radius)):
-            volume = 4/3 * math.pi* radius[i] **3
+            #volume = 4/3 * math.pi* radius[i] **3
+            volume = (math.pi**(n/2)/math.gamma(n/2 + 1)) * radius[i]**n
             density.append(sphere_inst_count[i]/volume)
             
         
@@ -2700,44 +2626,3 @@ class Complexity:
         return nbolas / tam #return the ratio between the number of balls necessary for full coverage and the number of instances of the dataset
 
 
-
-complexity = Complexity("dataset/61_iris.arff",distance_func="default",file_type="arff")
-
-
-print(complexity.T1())
-
-print(complexity.R_value())
-print(complexity.D3_value())
-print(complexity.CM())
-print(complexity.kDN())
-print(complexity.MRCA())
-print(complexity.DBC())
-print(complexity.SI())
-print(complexity.input_noise())
-print(complexity.borderline())
-print(complexity.deg_overlap())
-
-print(complexity.ICSV())
-print(complexity.NSG())
-
-print(complexity.C1())
-print(complexity.C2())
-print(complexity.Clust())
-print(complexity.purity())
-print(complexity.neighbourhood_separability())
-print(complexity.N1())
-print(complexity.N2())
-print(complexity.N3())
-print(complexity.N4())
-print(complexity.LSC())
-
-
-#print(complexity.T1())
-
-
-
-print(complexity.F1())
-print(complexity.F1v())
-print(complexity.F2())
-print(complexity.F3())
-print(complexity.F4())
