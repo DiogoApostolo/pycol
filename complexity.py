@@ -64,9 +64,13 @@ class Complexity:
 
         self.class_inxs = self.__get_class_inxs()
 
+        if(len(self.class_count)<2):
+           print("ERROR: Less than two classes are in the dataset.")
 
         return 
 
+
+    
     
     def __count_class_instances(self):
         '''
@@ -948,8 +952,17 @@ class Complexity:
             cls_inx = np.where( self.classes == self.y[i])[0][0]
             count_inter[cls_inx]+=min_inter
             count_intra[cls_inx]+=min_intra
-        r = np.divide(count_intra,count_inter)
+        
 
+        
+        r = np.array([])
+        for i in range(len(count_inter)):
+            if(count_inter[i]==0):
+                r=np.append(r,0)
+            else:
+                r=np.append(r,(count_intra[i]/count_inter[i]))
+        
+        print(r)
         N2 = np.divide(r,(1+r))
         return N2
 
@@ -984,7 +997,15 @@ class Complexity:
                     min_inter=self.dist_matrix[i][j]
             count_inter+=min_inter
             count_intra+=min_intra
-        r = count_intra/count_inter
+
+
+        if(count_inter==0):
+            r = 0
+        else:
+            r = count_intra/count_inter
+
+        
+        
 
         N2 = r/(1+r)
         return N2
@@ -1950,8 +1971,14 @@ class Complexity:
 
                 std_c1 = np.std(sample_c1,0)
                 std_c2 = np.std(sample_c2,0)
+                
 
+                
                 f1 = ((avg_c1-avg_c2)**2)/(std_c1**2+std_c2**2)
+                
+                
+                f1[np.isinf(f1)]=0
+                f1[np.isnan(f1)]=0
 
                 f1 = 1/(1+f1)
                 f1s.append(f1)
@@ -2030,8 +2057,14 @@ class Complexity:
                 numer=np.maximum(0.0, minmax - maxmin) 
             
                 denom=(maxmax - minmin)
-        
-                f2 = np.prod(numer/denom)
+
+
+                n_d = numer/denom
+               
+                n_d[np.isinf(n_d)]=0
+                n_d[np.isnan(n_d)]=0
+                
+                f2 = np.prod(n_d)
                 f2s.append(f2)
 
         return f2s
