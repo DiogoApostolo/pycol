@@ -58,12 +58,20 @@ Overall, `pycol` characterises class overlap as a heterogeneous concept, compris
 * **Purity**
 * **Neighbourhood Separability**
 
+## Instalation requirements
+
+All packages required to run pycol are listed in the requirements.txt file. 
+To install all needed pacakges run:
+
+`pip install -r requirements.txt`
+
 ## Usage Example:
 
 The `dataset` folder contains some datasets with binary and multi-class problems. All datasets are numerical and have no missing values. The `complexity.py` module implements the complexity measures.
 To run the measures, the `Complexity` class is instantiated and the results may be obtained as follows:
 
 ```python
+from complexity import Complexity
 complexity = Complexity("dataset/61_iris.arff",distance_func="default",file_type="arff")
 
 # Feature Overlap
