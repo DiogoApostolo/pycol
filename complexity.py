@@ -24,7 +24,7 @@ class Complexity:
     '''
     Complexity class, it makes available the following methods to calculate complexity metrics:
     F1, F1v, F2, F3, F4, R_value, D3, CM, kDN, MRCA, C1, C2, T1, DBC, N1, N2, N3, N4, SI,
-    LSC, purity, neighbourhood_seperability, input_noise, borderline, deg_overlap, ICSV, NSG, Clust, L1, L2, L3
+    LSC, purity, neighbourhood_seperability, input_noise, borderline, deg_overlap, ICSV, NSG, Clust
 
     '''
 
@@ -51,8 +51,7 @@ class Complexity:
             return
 
         self.X=np.array(X)
-        #print(self.X)
-        #self.X = self.X[:,0:2]
+      
         self.y=np.array(y)
         classes=np.unique(self.y)
 
@@ -125,12 +124,12 @@ class Complexity:
 
 
 
-        # print(meta)
+        
         #split each sample into attributes and label 
         X = [i[:num_attr] for i in data]
         y = [i[-1] for i in data]
 
-        #print(X)
+        
 
         #convert categorical features to ordinal
         X = np.array(X)
@@ -151,7 +150,7 @@ class Complexity:
         y = [np.where(classes == i[-1])[0][0] for i in data]
         
 
-        #print(X)        
+             
 
         return [X,y,meta]
     
@@ -177,8 +176,7 @@ class Complexity:
         #calculate the ranges of all attributes
         range_max=np.max(X,axis=0)
         range_min=np.min(X,axis=0)
-        #print(range_max)
-        #print(range_min)
+      
         for i in range(len(X)): 
             for j in range(i+1,len(X)):
                 #for attribute
@@ -213,7 +211,7 @@ class Complexity:
 
                 unnorm_dist_matrix[i][j]=np.sqrt(unnorm_dist)
                 unnorm_dist_matrix[j][i]=np.sqrt(unnorm_dist)
-        #print(dist_matrix)
+   
         return dist_matrix,unnorm_dist_matrix
 
     def __distance_HEOM_different_arrays(self,X,X2):
@@ -259,7 +257,7 @@ class Complexity:
                             dist+=1
                 dist_matrix[i][j]=np.sqrt(dist)
 
-        #print(dist_matrix)
+     
         return dist_matrix
 
     
@@ -398,7 +396,7 @@ class Complexity:
         for i in range(len(line)):
             #if the sample is inside de hypersphere
            
-            #print(line)
+           
             if(line[i]<=sigma):
                 #if the sample is from the same class as "x"
                 if(y[i]==y[inx]):
@@ -470,14 +468,14 @@ class Complexity:
                    
                     r_matrix[cls_inx,j]+=1
 
-        #print(r_matrix)
+       
         
         for i in range(len(r_matrix)):
             for j in range(len(r_matrix[0])):
                 r_matrix[i,j]=r_matrix[i,j]/self.class_count[i]
 
 
-        #print(r_matrix)
+        
 
         r_values = []
         for i in range(len(r_matrix)):
@@ -607,8 +605,7 @@ class Complexity:
             w = (1-(j/m))
             sum_val += w * (1-profile[j])
         mri_val = sum_val*(1/(2*m))
-        #print(profile)
-        #print(mri_val)
+    
         return mri_val
 
     def __MRI_k(self,cluster):
@@ -664,7 +661,7 @@ class Complexity:
                 new_y = np.concatenate([sample_c1_y,sample_c2_y],axis=0)
                 new_dist_matrix,_ = self.__calculate_distance_matrix(new_X,distance_func=distance_func)
                 
-                #print(new_dist_matrix)
+               
                 
                 mrca=np.zeros(n_clusters)
                 profiles = np.zeros((len(new_X),len(sigmas)))
@@ -692,7 +689,7 @@ class Complexity:
                         profiles[i,j]=psi
 
                 #cluster the the profiles
-                print(profiles)
+                
                 kmeans = KMeans(n_clusters=n_clusters).fit(profiles)
                 
 
@@ -909,7 +906,7 @@ class Complexity:
 
     def N1_imb(self):
         count = self.__calculate_n_inter(imb=True)
-        #print(count)
+        
         n1 = np.divide(count,self.class_count)
         return n1
 
@@ -927,7 +924,7 @@ class Complexity:
         problems. IEEE transactions on pattern analysis and machine intelligence 24(3):289-300
         '''
         count = self.__calculate_n_inter()
-        #print(count)
+       
         n1 = count/len(self.y)
         return n1
     
@@ -962,7 +959,7 @@ class Complexity:
             else:
                 r=np.append(r,(count_intra[i]/count_inter[i]))
         
-        print(r)
+        
         N2 = np.divide(r,(1+r))
         return N2
 
@@ -1376,15 +1373,7 @@ class Complexity:
         var (bool): True if hypersphere a is inside hypersphere b, false if not.
         '''
         var = False
-        '''
-        print("--------------")
-        print(center_a)
-        print(radius_a)
-        print(center_b)
-        print(radius_b)
-        print(np.sqrt(sum(np.square(center_a-center_b))) - (radius_b-radius_a))
-        print("------------")
-        '''
+        
        
 
        
@@ -1429,9 +1418,7 @@ class Complexity:
             for inx2_sphere in inx_sorted[:inx1:-1]:
                 
                 if (self.__is_inside(X[inx1_sphere],X[inx2_sphere],radius[inx1_sphere],radius[inx2_sphere])):
-                    #print("FOUND")
-                    #print(X[inx1_sphere])
-                    #print(X[inx2_sphere])
+                    
                     inst_per_sphere[inx2_sphere] += inst_per_sphere[inx1_sphere]
                     inst_per_sphere[inx2_sphere] = 0
                     break
@@ -1455,14 +1442,11 @@ class Complexity:
 
         #find the nearest sample of the opposite class for every sample in X.
         e_ind,e_dist = self.__find_nearest_oposite_class_all(dist_matrix=self.dist_matrix)
-        #print(self.X)
-        #print(self.unnorm_dist_matrix)
-        #print(e_dist)
-        #print(nearest_enemy_dist)
+       
         
         
         radius = np.array([-1.0]*len(e_ind))
-        #print(nearest_enemy_ind)
+        
 
 
         #calculates the radius of each hypersphere
@@ -1476,16 +1460,13 @@ class Complexity:
 
         #remove the hyperspheres that are complety inside another hypersphere.
         sphere_inst_count=self.__remove_overlapped_spheres(radius)
-        #print(scaled_X)
-        #print(radius)
+        
         '''
         for i in range(len(self.class_inxs)):
             sphere_inst_count = np.concatenate((sphere_inst_count,self.__remove_overlapped_spheres(scaled_X[self.class_inxs[i],:],radius[self.class_inxs[i]])))   
             ordered_radius = np.concatenate((ordered_radius,radius[self.class_inxs[i]]))
         '''
-        #print(sphere_inst_count)
         
-        #print(radius)
         return sphere_inst_count,radius
     
 
@@ -1505,7 +1486,7 @@ class Complexity:
         complexity. ACM Computing Surveys (CSUR) 52(5):1-34
         '''
         sphere_inst_count,radius=self.__get_sphere_count()
-        print(radius)
+        
         t1 = len(sphere_inst_count[sphere_inst_count > 0])/ len(self.y)
         
         #t1 = sum(sphere_inst_count[sphere_inst_count > 0]) / len(self.y)))/len(sphere_inst_count[sphere_inst_count > 0])
@@ -1571,7 +1552,7 @@ class Complexity:
 
         #find the nearest neightbour of the oposite class for every sample
         nearest_enemy_inx,nearest_enemy_dist = self.__find_nearest_oposite_class_all()
-        #print(nearest_enemy_dist)
+        
         ls_count = []
         
         #for each sample count the amount of samples inside the hypersphere centered at the sample with radius equal
@@ -1618,7 +1599,7 @@ class Complexity:
                     count += 1
                     inxs.append(j)
             cls_inx = np.where( self.classes == self.y[i])[0][0]
-            #print(cls_inx)
+            
             ls_count[cls_inx].append((count,i,inxs))
         
      
@@ -1651,7 +1632,7 @@ class Complexity:
             
 
         
-        #print(core_count)
+       
 
         clust_measure = core_count/len(self.X)
         return clust_measure
@@ -1697,9 +1678,7 @@ class Complexity:
         
         #find the hyperspheres and their radius
         sphere_inst_count,radius=self.__get_sphere_count()
-        #print(radius)
-        #print(len(sphere_inst_count))
-        #print(len(sphere_inst_count))
+        
         
 
         #calculate the density of each hypersphere
@@ -1715,7 +1694,7 @@ class Complexity:
 
 
         mean = sum(density)/len(sphere_inst_count[sphere_inst_count > 0])
-        #print(len(sphere_inst_count[sphere_inst_count > 0]))
+       
         
         #calculate the icsv measure using the mean and densities of the spheres
         for i in range(len(radius)):
@@ -1764,7 +1743,7 @@ class Complexity:
             feature_bounds.append(np.arange(min_feature,max_feature,step))
         
 
-        #print(feature_bounds)
+        
        
         sample_dic = {}
         #map each cell to the cell it belongs to (sample->cell)
@@ -1844,7 +1823,7 @@ class Complexity:
                 for label in reverse_dic[cell]:
                     class_counts[np.where(classes==label)[0][0]]+=1
                 class_sum=0
-                #print(class_counts)
+                
                 #sum the values on each cell
                 for count in class_counts:
                     class_sum+=((count/sum(class_counts))-(1/num_classes))**2
@@ -1864,7 +1843,7 @@ class Complexity:
         
         norm_resolutions = [x/max_resolution for x in list(range(max_resolution))]
         norm_purities = [(x-min(w_purities))/(max(w_purities)-min(w_purities)) for x in w_purities]
-        print(norm_purities)
+        
         auc=sklearn.metrics.auc(norm_resolutions,norm_purities)
         return auc/0.702
     
@@ -1891,7 +1870,7 @@ class Complexity:
         neigh_sep = []
         #multiple resolutions
         for i in range(max_resolution):
-            #print("Resolution: "+str(i))
+            
             reverse_dic=self.__calculate_cells(i,transpose_X)
             reverse_dic_labels=self.__calculate_cells(i,transpose_X,get_labels=1)
             average_ns=0
@@ -1913,7 +1892,7 @@ class Complexity:
                         count=self.__knn(sample,copy.copy(self.dist_matrix[sample]),k+1)
                         cls_inx = np.where( self.classes == self.y[sample])[0][0]
                         class_count=count[cls_inx]
-                        #print(count)
+                        
                         prop = class_count/sum(count)
                         props.append(prop)
                     
@@ -2272,8 +2251,7 @@ class Complexity:
 
                     sample_c1 = np.array(sample_c1)
                     sample_c2 = np.array(sample_c2)
-                    #print(sample_c1)
-                    #print(sample_c2)
+                    
                 f4=len(min_overlap_inx)/(len(sample_c1_y)+len(sample_c2_y))
                 f4s.append(f4)
         return f4s
@@ -2394,123 +2372,6 @@ class Complexity:
     # -*- coding: utf-8 -*-
 
 
-    def l1(self):
-
- 
-        scaler = sklearn.preprocessing.StandardScaler()
-        svc = sklearn.svm.LinearSVC(penalty="l2",loss="hinge",C=2.0,tol=10e-3,max_iter=1000,random_state=0)
-        
-        svc_pipeline = sklearn.pipeline.Pipeline([("scaler", scaler), ("svc", svc)])
-        sum_err_dist = []
-
-        for i in range(len(self.class_inxs)):
-            for j in range(i+1,len(self.class_inxs)):
-    
-                valid_inxs_c1 = self.class_inxs[i]
-                valid_inxs_c2 = self.class_inxs[j]
-                sample_c1 = self.X[valid_inxs_c1]
-                sample_c2 = self.X[valid_inxs_c2]
-
-                l_c1 = self.y[valid_inxs_c1]
-                l_c2 = self.y[valid_inxs_c2]
-
-                sub_X = np.concatenate((sample_c1,sample_c2))
-                sub_y = np.concatenate((l_c1,l_c2))
-
-                svc_pipeline.fit(sub_X,sub_y)
-
-                y_pred = svc_pipeline.predict(sub_X)
-                misclassified_insts = sub_X[y_pred != sub_y, :]
-
-                if misclassified_insts.size:
-                    insts_dists = svc_pipeline.decision_function(misclassified_insts)
-                else:
-                    insts_dists = np.array([0.0], dtype=float)
-
-                sum_err_dist.append(np.linalg.norm(insts_dists, ord=1) / (len(sub_y)))
-
-        sum_err_dist = np.array(sum_err_dist)
-        l1 = 1.0 - 1.0 / (1.0 + sum_err_dist)
-        return l1
-
-    def l2(self):
-        print("bruh")
-        scaler = sklearn.preprocessing.StandardScaler()
-        svc = sklearn.svm.LinearSVC(penalty="l2",loss="hinge",C=2.0,tol=10e-3,max_iter=1000,random_state=0)
-        
-        svc_pipeline = sklearn.pipeline.Pipeline([("scaler", scaler), ("svc", svc)])
-        l2 = []
-
-        for i in range(len(self.class_inxs)):
-            for j in range(i+1,len(self.class_inxs)):
-    
-                valid_inxs_c1 = self.class_inxs[i]
-                valid_inxs_c2 = self.class_inxs[j]
-                sample_c1 = self.X[valid_inxs_c1]
-                sample_c2 = self.X[valid_inxs_c2]
-
-                l_c1 = self.y[valid_inxs_c1]
-                l_c2 = self.y[valid_inxs_c2]
-
-                sub_X = np.concatenate((sample_c1,sample_c2))
-                sub_y = np.concatenate((l_c1,l_c2))
-
-                svc_pipeline.fit(sub_X,sub_y)
-
-                y_pred = svc_pipeline.predict(sub_X)
-
-                error = sklearn.metrics.zero_one_loss(y_true=sub_y, y_pred=y_pred, normalize=True)
-
-                l2.append(error)
-        
-        return l2
-
-    def l3(self):
-
-        scaler = sklearn.preprocessing.StandardScaler()
-        svc = sklearn.svm.LinearSVC(penalty="l2",loss="hinge",C=2.0,tol=10e-3,max_iter=1000,random_state=0)
-        
-        svc_pipeline = sklearn.pipeline.Pipeline([("scaler", scaler), ("svc", svc)])
-        l3 = []
-
-
-        
-        for i in range(len(self.class_inxs)):
-            for j in range(i+1,len(self.class_inxs)):
-    
-                valid_inxs_c1 = self.class_inxs[i]
-                valid_inxs_c2 = self.class_inxs[j]
-                sample_c1 = self.X[valid_inxs_c1]
-                sample_c2 = self.X[valid_inxs_c2]
-
-                l_c1 = self.y[valid_inxs_c1]
-                l_c2 = self.y[valid_inxs_c2]
-
-                sub_X = np.concatenate((sample_c1,sample_c2))
-                sub_y = np.concatenate((l_c1,l_c2))
-                
-                svc_pipeline.fit(sub_X, sub_y)
-                
-                
-                valid_inxs = []
-                valid_inxs.append(valid_inxs_c1)
-                valid_inxs.append(valid_inxs_c2)
-               
-                X_interp, y_interp=self.__interpolate_samples(class_inxs=valid_inxs)
-          
-
-                y_pred = svc_pipeline.predict(X_interp)
-
-                error = sklearn.metrics.zero_one_loss(y_true=y_interp, y_pred=y_pred, normalize=True)
-
-                l3.append(error)
-
-
-        return l3
-
-
-
-
 
     def ONB_avg(self,dist_id = "manhattan"):
 
@@ -2602,14 +2463,14 @@ class Complexity:
         """
         
         featu = pd.DataFrame(self.X) #feature part of the dataframe
-        print(featu)
+        
         clas = pd.DataFrame(self.y) #class part of the dataframe
         
         clas.rename(columns = {0 : 'class'}, inplace = True)
-        print(clas)
+        
         dataset = featu.join(clas)
 
-        print(dataset)
+        
         tam = dataset.shape[0] #number of instances of the dataframe
 
         clas_dif = np.unique(clas) #array of the different clases in the dataset   
