@@ -232,8 +232,8 @@ class Complexity:
         
 
         #calculate the ranges of all attributes
-        range_max=np.max(X,axis=1)
-        range_min=np.min(X,axis=1)
+        range_max=np.max(X,axis=0)
+        range_min=np.min(X,axis=0)
 
         for i in range(len(X2)): 
             for j in range(len(X)):
