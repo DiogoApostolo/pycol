@@ -58,12 +58,14 @@ Overall, `pycol` characterises class overlap as a heterogeneous concept, compris
 * **Purity**
 * **Neighbourhood Separability**
 
-## Instalation requirements
+## Instalation
 
 All packages required to run pycol are listed in the requirements.txt file. 
 To install all needed pacakges run:
 
 `pip install -r requirements.txt`
+
+The package is also available for instalation through pypi: https://pypi.org/project/pycol-complexity/
 
 ## Usage Example:
 
