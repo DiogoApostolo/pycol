@@ -26,7 +26,7 @@ class Complexity:
     '''
     Complexity class, it makes available the following methods to calculate complexity metrics:
     F1, F1v, F2, F3, F4, R_value, D3, CM, kDN, MRCA, C1, C2, T1, DBC, N1, N2, N3, N4, SI,
-    LSC, purity, neighbourhood_seperability, input_noise, borderline, deg_overlap, ICSV, NSG, Clust
+    LSC, purity, neighbourhood_seperability, input_noise, borderline, deg_overlap, ICSV, NSG, Clust and ONB
 
     '''
 
@@ -72,6 +72,10 @@ class Complexity:
 
 
         self.class_inxs = self.__get_class_inxs()
+
+
+        self.sphere_inst_count_T1 = []
+        self.sphere_tuple_ONB = []
 
         if(len(self.class_count)<2):
            print("ERROR: Less than two classes are in the dataset.")
@@ -994,7 +998,7 @@ class Complexity:
                         
                         vertix.append(i)
                         vertix.append(j)
-
+        
         unique_vertix = np.unique(vertix)
 
         #---------------------------
@@ -1008,7 +1012,7 @@ class Complexity:
         else:
             count = np.zeros(len(self.classes))
             for inx in unique_vertix:
-                cls_inx = np.where( self.classes == self.y[inx])[0][0]
+                cls_inx = np.where( self.classes == y[inx])[0][0]
                 count[cls_inx]+=1
 
 
@@ -1397,11 +1401,11 @@ class Complexity:
         '''
         var = False
         
-       
+        distance_centers = np.sqrt(sum(np.square(center_a-center_b)))
 
        
-        if(abs(np.sqrt(sum(np.square(center_a-center_b))) - (radius_b-radius_a))<0.001):
-            
+        #if(abs(np.sqrt(sum(np.square(center_a-center_b))) - (radius_b-radius_a))<0.001):
+        if distance_centers + radius_a <= radius_b:   
             var=True
         return var
 
@@ -1430,8 +1434,8 @@ class Complexity:
         of this function an hypersphere was found to be completly inside another then its count will be 0.
         '''
         
-        X = self._scale_N(self.X)
-        #X = self.X
+        #X = self._scale_N(self.X)
+        X = self.X
         inx_sorted = np.argsort(radius)
         inst_per_sphere = np.ones(len(self.X), dtype=int)
 
@@ -1464,14 +1468,14 @@ class Complexity:
         '''
 
         #find the nearest sample of the opposite class for every sample in X.
-        e_ind,e_dist = self.__find_nearest_oposite_class_all(dist_matrix=self.dist_matrix)
+        e_ind,e_dist = self.__find_nearest_oposite_class_all(dist_matrix=self.unnorm_dist_matrix)
        
         
         
         radius = np.array([-1.0]*len(e_ind))
         
 
-
+        
         #calculates the radius of each hypersphere
         for ind in range(len(radius)):
             if radius[ind] < 0.0:
@@ -1479,11 +1483,13 @@ class Complexity:
         
         
         sphere_inst_count = np.array([])
-        ordered_radius = np.array([])
 
         #remove the hyperspheres that are complety inside another hypersphere.
         sphere_inst_count=self.__remove_overlapped_spheres(radius)
         
+        
+
+
         '''
         for i in range(len(self.class_inxs)):
             sphere_inst_count = np.concatenate((sphere_inst_count,self.__remove_overlapped_spheres(scaled_X[self.class_inxs[i],:],radius[self.class_inxs[i]])))   
@@ -1510,7 +1516,14 @@ class Complexity:
         is your classification problem? a survey on measuring classification
         complexity. ACM Computing Surveys (CSUR) 52(5):1-34
         '''
-        sphere_inst_count,radius=self.__get_sphere_count()
+
+
+        
+        if(len(self.sphere_inst_count_T1)==0):
+            self.sphere_inst_count_T1,self.radius_T1=self.__get_sphere_count()
+                
+            
+        sphere_inst_count = self.sphere_inst_count_T1
 
         
 
@@ -1532,15 +1545,15 @@ class Complexity:
 
 
     #only for datasets with no categorical features
-    def DBC(self,distance_func="default",imb=False):
+    def DBC(self,distance_func="default",imb=False,sphere_count_method = "ONB"):
         '''
         Calculate the DBC complexity measure defined in [1].
 
         -------
         Parameters:
-        distance_func (string): The distance metric to calculate the distance between all hypersphere centers. 
-        For now this value can only be "HEOM", since this is the only distance metric implemented.
+        distance_func (string): The distance metric to calculate the distance between all hypersphere centers.  For now this value can only be "HEOM", since this is the only distance metric implemented.
         imb (bool): If True the the values for minority and majority will both be returned individually, if False a single value for the whole dataset is returned
+        sphere_count_method (string): chose which method should be used to calculate the hyperspheres: "ONB" or "T1"
         -------
         Returns:
         dbc_measure (float): the DBC complexity measure
@@ -1553,8 +1566,29 @@ class Complexity:
         '''
 
         #find the hypersphere centers
-        sphere_inst_count,radius=self.__get_sphere_count()
-        inx=np.where(sphere_inst_count!=0)[0]
+
+        if(sphere_count_method=="T1"):
+            if(len(self.sphere_inst_count_T1)==0):
+                self.sphere_inst_count_T1,self.radius_T1=self.__get_sphere_count()
+                
+            sphere_inst_count = self.sphere_inst_count_T1
+            
+            inx=np.where(sphere_inst_count!=0)[0]
+            sphere_inst_count = sphere_inst_count[inx]
+
+
+
+        elif(sphere_count_method=="ONB"):
+
+            if(len(self.sphere_tuple_ONB)==0):
+                self.sphere_tuple_ONB=self.get_ONB_sphreres()
+            
+            sphere_inst_count = [x[0] for x in self.sphere_tuple_ONB]
+            inx = [x[2] for x in self.sphere_tuple_ONB]
+        else:
+            print("Chose an valid sphere_count_method (T1 or ONB)")
+            return  
+        
 
 
         num_inx_per_class = np.zeros(len(self.classes))
@@ -1579,7 +1613,7 @@ class Complexity:
         if(imb):
             dbc_measure = np.divide(n_inter,num_inx_per_class)
         else:
-            dbc_measure = n_inter/len(sphere_inst_count[sphere_inst_count > 0])
+            dbc_measure = n_inter/len(sphere_inst_count)
         
         
         return dbc_measure
@@ -1714,12 +1748,13 @@ class Complexity:
         return clust_measure
 
     #only for datasets with no categorical features
-    def NSG(self,imb=False):
+    def NSG(self,imb=False,sphere_count_method="ONB"):
         '''
         Calculate the NSG complexity measure defined in [1].
         -------
         Parameters:
         imb (bool): If True the the values for minority and majority will both be returned individually, if False a single value for the whole dataset is returned
+        sphere_count_method (string): chose which method should be used to calculate the hyperspheres: "ONB" or "T1"
         -------
         Returns: 
         nsg_measure (float): The value of the NSG complexity measure
@@ -1730,31 +1765,53 @@ class Complexity:
         of pattern-recognition data sets. 18th Annual Symposium of the Pattern
         Recognition Association of South Africa
         '''
-        sphere_inst_count,radius=self.__get_sphere_count()
-        
+
+
+        if(sphere_count_method=="T1"):
+            if(len(self.sphere_inst_count_T1)==0):
+                self.sphere_inst_count_T1,self.radius_T1=self.__get_sphere_count()
+                
+            sphere_inst_count = self.sphere_inst_count_T1
+            
+            inx=np.where(sphere_inst_count!=0)[0]
+            sphere_inst_count = sphere_inst_count[inx]
+
+
+
+        elif(sphere_count_method=="ONB"):
+
+            if(len(self.sphere_tuple_ONB)==0):
+                self.sphere_tuple_ONB  =self.get_ONB_sphreres()
+            
+            sphere_inst_count = [x[0] for x in self.sphere_tuple_ONB]
+            inx = [x[2] for x in self.sphere_tuple_ONB]
+        else:
+            print("Chose an valid sphere_count_method (T1 or ONB)")
+            return  
 
         
+                
 
         if(imb):
         #count the number of hyperspheres of each class
-            inx=np.where(sphere_inst_count!=0)[0]
+            
 
 
             num_inx_per_class = np.zeros(len(self.classes))
-            num_instances_per_ball_per_class = np.zeros(len(self.classes))
+            
             for i in inx:
 
                 cls_inx = np.where( self.classes == self.y[i])[0][0]
                 num_inx_per_class[cls_inx]+=1
                
 
-            nsg_measure = np.divide(num_instances_per_ball_per_class,num_inx_per_class)
+            nsg_measure = np.divide(self.class_count,num_inx_per_class)
         else:
-            nsg_measure = sum(sphere_inst_count)/len(sphere_inst_count[sphere_inst_count > 0])
+            nsg_measure = sum(sphere_inst_count)/len(sphere_inst_count)
         return nsg_measure
     
     #only for datasets with no categorical features
-    def ICSV(self,normalize=True,imb=False):
+    def ICSV(self,normalize=True,imb=False,sphere_count_method="ONB"):
         
         '''
         Calculate the ICSV complexity measure defined in [1].
@@ -1772,13 +1829,37 @@ class Complexity:
         '''
         
         #find the hyperspheres and their radius
-        sphere_inst_count,radius=self.__get_sphere_count()
+        if(sphere_count_method=="T1"):
+            if(len(self.sphere_inst_count_T1)==0):
+                self.sphere_inst_count_T1,self.radius_T1=self.__get_sphere_count()
+                
+            sphere_inst_count = self.sphere_inst_count_T1
+            radius = self.radius_T1
+            
+            inx=np.where(sphere_inst_count!=0)[0]
+            sphere_inst_count = sphere_inst_count[inx]
+            radius_non_zero = radius[inx]
+
+
+
+        elif(sphere_count_method=="ONB"):
+
+            if(len(self.sphere_tuple_ONB)==0):
+                self.sphere_tuple_ONB=self.get_ONB_sphreres()
+            
+            
+            sphere_inst_count = [x[0] for x in self.sphere_tuple_ONB]
+            inx = [x[2] for x in self.sphere_tuple_ONB]
+            radius_non_zero = [x[3] for x in self.sphere_tuple_ONB]
+        else:
+            print("Chose an valid sphere_count_method (T1 or ONB)")
+            return  
         
-        inx=np.where(sphere_inst_count!=0)[0]
+        
         
         #keep only the hyperspheres with samples in them
-        sphere_inst_count_non_zero = sphere_inst_count[inx] 
-        radius_non_zero = radius[inx]
+        
+        
 
         if(normalize):
             radius_non_zero = radius_non_zero/np.max(radius_non_zero)
@@ -1787,14 +1868,14 @@ class Complexity:
         n = len(self.X[0])
         density = []
         volumes = []
-        for i in range(len(sphere_inst_count_non_zero)):
+        for i in range(len(sphere_inst_count)):
             volumes.append((math.pi**(n/2)/math.gamma(n/2 + 1)) * radius_non_zero[i]**n)
     
         
         
-        for i in range(len(sphere_inst_count_non_zero)):
+        for i in range(len(sphere_inst_count)):
 
-            density.append(sphere_inst_count_non_zero[i]/volumes[i])
+            density.append(sphere_inst_count[i]/volumes[i])
             
         
         
@@ -1802,12 +1883,13 @@ class Complexity:
             density_per_class = []
             for i in range(len(self.classes)):
                 density_per_class.append([])
+            
             j = 0
-            for i in range(len(sphere_inst_count)):
-                if(sphere_inst_count[i]!=0):
-                    cls_inx = np.where( self.classes == self.y[i])[0][0]
-                    density_per_class[cls_inx].append(density[j])
-                    j+=1
+            for i in inx:
+                cls_inx = np.where( self.classes == self.y[i])[0][0]
+                density_per_class[cls_inx].append(density[j])
+                j+=1
+            
             icsv_measure = []
             for i in range(len(self.classes)):
                 icsv_measure.append(np.std(density_per_class[i]))
@@ -1941,6 +2023,7 @@ class Complexity:
                 #calculate the class counts on each cell
                 for label in reverse_dic[cell]:
                     class_counts[np.where(classes==label)[0][0]]+=1
+                
                 class_sum=0
                 
                 #sum the values on each cell
@@ -2479,41 +2562,14 @@ class Complexity:
         return count
 
 
-    #only for datasets with no categorical features
-    def input_noise(self):
+
+    def input_noise(self,imb=False):
         '''
         Calculate the input noise metric defined in [1].
         Uses one vs one method if the dataset contains more than 2 classes.
         -----
-        Returns:
-        ins (array): the input noise value for each each one vs one combination of classes.
-        -----
-        References:
-
-        [1] Van der Walt CM, Barnard E (2007) Measures for the characterisation
-        of pattern-recognition data sets. 18th Annual Symposium of the Pattern
-        Recognition Association of South Africa
-        '''
-        ins = []
-        for i in range(len(self.class_inxs)):
-            for j in range(i+1,len(self.class_inxs)):
-                X = self.X
-                valid_inxs_c1 = self.class_inxs[i]
-                valid_inxs_c2 = self.class_inxs[j]
-                sample_c1 = X[valid_inxs_c1]
-                sample_c2 = X[valid_inxs_c2]
-                
-                total_count=0
-                total_count+=self.__class_overlap(sample_c1,sample_c2)
-                total_count+=self.__class_overlap(sample_c2,sample_c1)
-
-                ins.append(total_count/(len(X)*len(X[0])))
-        return ins
-
-    def input_noise_imb(self,imb=False):
-        '''
-        Calculate the input noise metric defined in [1].
-        Uses one vs one method if the dataset contains more than 2 classes.
+        Parameters:
+        imb (bool): If True the the values for minority and majority will both be returned individually, if False a single value for the whole dataset is returned
         -----
         Returns:
         ins (array): the input noise value for each each one vs one combination of classes.
@@ -2626,13 +2682,69 @@ class Complexity:
         return deg_ov
     
 
-  
+
+    def get_ONB_sphreres(self):
+        
+        featu = pd.DataFrame(self.X) #feature part of the dataframe
+        clas = pd.DataFrame(self.y) #class part of the dataframe
+        
+        clas.rename(columns = {0 : 'class'}, inplace = True)
+        
+        dataset = featu.join(clas)
+
+        clas_dif = self.classes
+
+        
+        dtf_dist =  pd.DataFrame(self.dist_matrix) #distance matrix as a dataframe    
+
+        lista_el_cla = [] #empty list for the elements of each class
+
+        el_cla = [] #empty list for the number of elements in each class
+
+        for cla in clas_dif:
+
+            lista_el_cla = lista_el_cla + [list(dataset.loc[dataset["class"]==cla].index.values)] #add the elements of each class
+            el_cla = el_cla + [len(list(dataset.loc[dataset["class"]==cla].index.values))] #add the number of elements in each class
+
+        cl=0
+        
+       
+
+        sphere_coverage = []
+        for cla in clas_dif: #for each class
+
+
+            falta = lista_el_cla[cl] #list of uncovered instances of that class, which initially includes all elements of said class
+
+            while len(falta)!=0: #while there are uncovered elements of said class
+
+                bolaslist=[] #empty list for the elements of the ball that covers the most instances for this iteration
+                center = falta[0]
+                r = 0
+                for j in falta: #for each uncovered element
+
+                    mininter = min(dtf_dist.loc[j,dataset["class"]!=cla]) #the biggest possible radius that does not cover elements from other classes is computed
+
+                    s=dtf_dist.iloc[j, falta]<=mininter #the instances included in that ball are obtained
+
+                    bolas = [i for i in s[s].index.values] #said instances are saved as a list
+
+                    if len(bolas) > len(bolaslist): #if this ball covers more instances than the previous best candidate
+                        center = j
+                        bolaslist = bolas #its covered elements are saved
+                        r = mininter
+                sphere_coverage.append((len(bolaslist),self.classes[cl],center,r))
+
+                for ele in sorted(bolaslist, reverse = True): 
+
+                    del falta[falta.index(ele)] #the elements covered by chosen ball are deleted from the list of uncovered instances 
+
+
+            cl+=1 #continue to the next class
+        return sphere_coverage
 
     # -*- coding: utf-8 -*-
-
-
-
-    def ONB_avg(self,imb=False):
+    def ONB(self,imb=False,is_tot=False):
 
         """
 
@@ -2644,147 +2756,35 @@ class Complexity:
         Returns:
         avg (float): The ratios between the number of balls necessary to cover the points of a class and the number of points of that class
         """
-        featu = pd.DataFrame(self.X) #feature part of the dataframe
         
-        clas = pd.DataFrame(self.y) #class part of the dataframe
+        if(len(self.sphere_tuple_ONB)==0):
+            self.sphere_tuple_ONB = self.get_ONB_sphreres()
+            
         
-        clas.rename(columns = {0 : 'class'}, inplace = True)
+        b_list = self.sphere_tuple_ONB
+        tot = len(b_list)
         
-        dataset = featu.join(clas)
 
-        clas_dif = self.classes
+        avg = np.zeros(len(self.classes))
+        for b in b_list:
+            avg[b[1]]+=1
+        
+        avg = np.divide(avg,self.class_count)
 
-        instance_per_ball = []
-
-        dtf_dist =  pd.DataFrame(self.dist_matrix) #distance matrix as a dataframe    
-
-        lista_el_cla = [] #empty list for the elements of each class
-
-        el_cla = [] #empty list for the number of elements in each class
-
-        for cla in clas_dif:
-
-            lista_el_cla = lista_el_cla + [list(dataset.loc[dataset["class"]==cla].index.values)] #add the elements of each class
-
-            el_cla = el_cla + [len(list(dataset.loc[dataset["class"]==cla].index.values))] #add the number of elements in each class
-
-        cl=0 #counter for the classes, starting at 0
-
-        if(imb):
-            avg = np.zeros(len(self.classes))
+        if(is_tot):
+            return tot/len(self.X)
         else:
-            avg=0 #variable where the ratios of balls per number of elements of each class will be added, and later averaged
-
-         
-        for cla in clas_dif: #for each class
-
-            bolascla=0 #counter for the number of balls necessary for class coverage 
-
-            falta = lista_el_cla[cl] #list of uncovered instances of that class, which initially includes all elements of said class
-
-            while len(falta)!=0: #while there are uncovered elements of said class
-
-                bolaslist=[] #empty list for the elements of the ball that covers the most instances for this iteration
-
-                for j in falta: #for each uncovered element
-
-                    mininter = min(dtf_dist.loc[j,dataset["class"]!=cla]) #the biggest possible radius that does not cover elements from other classes is computed
-
-                    s=dtf_dist.iloc[j, falta]<=mininter #the instances included in that ball are obtained
-
-                    bolas = [falta.index(i) for i in s[s].index.values] #said instances are saved as a list
-
-                    if len(bolas) > len(bolaslist): #if this ball covers more instances than the previous best candidate
-
-                        bolaslist = bolas #its covered elements are saved
-
-                bolascla+=1 #the total of chosen balls for the coverage of said class increases by 1
-                instance_per_ball.append(bolaslist)
-                for ele in sorted(bolaslist, reverse = True): 
-
-                    del falta[ele] #the elements covered by chosen ball are deleted from the list of uncovered instances 
-
             if(imb):
-                avg[cl] = bolascla / el_cla[cl]
+                return avg
             else:
-                avg += (bolascla / el_cla[cl]) #the ratio between the number of balls necessary to cover the points of a class and the number of points of that class is added to the sum
-
-            cl+=1 #continue to the next class
-        if(imb):
-            return avg
-        else:
-            return avg / len(clas_dif) #return the average of the ratios between the number of balls necessary to cover the points of a class and the number of points of that class
+                return sum(avg) / len(self.classes) #return the average of the ratios between the number of balls necessary to cover the points of a class and the number of points of that class
 
 
 
 
-
-    def ONB_tot(self):
-
-        """
-
-        ONB complexity metric using the total number of balls
-        ------
-        Returns:
-        tot (float): The ratio between the number of balls necessary for full coverage and the number of instances of the dataset
-    
-        """
-        
-        featu = pd.DataFrame(self.X) #feature part of the dataframe
-        
-        clas = pd.DataFrame(self.y) #class part of the dataframe
-        
-        clas.rename(columns = {0 : 'class'}, inplace = True)
-        
-        dataset = featu.join(clas)
-
-        
-        tam = dataset.shape[0] #number of instances of the dataframe
-
-        clas_dif = np.unique(clas) #array of the different clases in the dataset   
 
     
 
-        dtf_dist = pd.DataFrame(self.dist_matrix) #distance matrix as a dataframe   
-
-        lista_el_cla = [] #empty list for the elements of each class
-
-        for cla in clas_dif:
-
-            lista_el_cla = lista_el_cla + [list(dataset.loc[dataset["class"]==cla].index.values)] #add the elements of each class
-
-        nbolas = 0 #counter for the balls necessary for the full coverage of the dataset, starting at 0
-
-        cl=0 #counter for the classes, starting at 0
-
-        for cla in clas_dif: #for each class
-
-            falta = lista_el_cla[cl] #list of uncovered instances of that class, which initially includes all elements of said class
-
-            while len(falta)!=0: #while there are uncovered elements of said class
-
-                bolaslist=[] #empty list for the elements of the ball that covers the most instances for this iteration
-
-                for j in falta: #for each uncovered element
-
-                    mininter = min(dtf_dist.loc[j,dataset["class"]!=cla]) #the biggest possible radius that does not cover elements from other classes is computed
-
-                    s=dtf_dist.iloc[j, falta]<=mininter #the instances included in that ball are obtained
-
-                    bolas = [falta.index(i) for i in s[s].index.values] #said instances are saved as a list
-
-                    if len(bolas) > len(bolaslist): #if this ball covers more instances than the previous best candidate
-
-                        bolaslist = bolas #its covered elements are saved
-
-                nbolas+=1 #the total of chosen balls for the coverage increases by 1
-
-                for ele in sorted(bolaslist, reverse = True): 
-
-                    del falta[ele] #the elements covered by chosen ball are deleted from the list of uncovered instances 
-
-            cl+=1 #continue to the next class  
-
-        return nbolas / tam #return the ratio between the number of balls necessary for full coverage and the number of instances of the dataset
 
 
+    
