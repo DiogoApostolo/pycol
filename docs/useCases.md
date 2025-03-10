@@ -303,7 +303,7 @@ print(high_metric_df[['SMOTE','RUS','REEN','EEN','Borderline','GRAPH','MWMOTE']]
 
 ```
 
-|Oversampling algorithm | SMOTE | SMOTE-ENN | Borderline| RUS| REEN | |Graph| |MWMOTE|
+| Oversampling algorithm | SMOTE | SMOTE-ENN | Borderline | RUS | REEN | Graph | MWMOTE |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |     
 | ONB < 0.3 | -0.009 | -0.0260 | -0.006  | -0.1648 | -0.0493 | -0.0310 |  0.0090 |
 | ONB > 0.7 | 0.1002 | 0.1280  |  0.1245 |   0.0692| 0.1744  |0.1432   | 0.1572  |
