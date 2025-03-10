@@ -79,10 +79,9 @@ A practical use case is shown using the \textit{winequality} dataset from the KE
 
 ```python
 
-comp = Complexity(file_name="winequality.arff")
+comp = Complexity(file_name="datasets/winequality.arff")
 
-B,S,R,O,C = comp.borderline(
-    return_all=True,imb=True)
+B,S,R,O,C = comp.borderline(return_all=True,imb=True)
 
 print(B)
 print(S)
@@ -99,21 +98,23 @@ A practical example is shown using an imbalanced credit card fraud detection dat
 
 The goal is to pick the most discriminant features using the F1 overlap measure. Figure \ref{fig:feature_sel} shows all features plotted according to their discriminant power.
 
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/images/Feature-selection-2.png?raw=true)
+![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/Feature-selection-2.png?raw=true)
 
 As it is possible to observe that there are some features with low discriminant power (below 0.6), which can likely be removed from the dataset without losing too much performance.
+
+| First Header | Second Header |
+| ------------- | ------------- |
+| Content Cell | Content Cell |
+| Content Cell | Content Cell |
 
 ### Code Example
 
 ```python
 
-param_grid = {'C': [1, 10],  
-                'gamma': [0.1, 0.01], 
-                'kernel': ['rbf']} 
 
 f1_average = 'binary'
 
-folder = "arff/"
+folder = "datasets/"
 file = "creditCardFraud.arff"
 
 #Chose Classifier
