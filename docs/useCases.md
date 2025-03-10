@@ -7,10 +7,10 @@ One practical use case of pycol is noise removal, particularly following synthet
 points in regions with high class overlap, introducing noise. By leveraging pycol’s overlap measures, we can identify
 and remove these noisy synthetic instances. A scatter plot before and after noise removal can be obtained to see the results of the process (Figure \ref{fig:noise-rem-1}).
 
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/images/SMOTE-1.png?raw=true)
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/images/SMOTE-2.png?raw=true)
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/images/SMOTE-3.png?raw=true)
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/images/SMOTE-4.png?raw=true)
+![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-1.png?raw=true)
+![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-2.png?raw=true)
+![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-3.png?raw=true)
+![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-4.png?raw=true)
 
 ### Code Example
 
@@ -68,9 +68,9 @@ print("% Reduction: " + str(1 - len(X_noise_removed)/len(X_res)))
 
 Another valuable application is guided oversampling. Instead of applying a uniform oversampling strategy, we can use pycol to perform a more detailed oversampling based on the typology of safe, borderline, rare, and outlier instances \citep{borderline}, using the borderline metric. Specifically, pycol can be used to identify only one type of sample, for example the borderline samples, and use only these to generate new samples, instead of the entire dataset (Figure \ref{fig:noise-rem}).
 
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/images/guide-1.png?raw=true)
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/images/guide-2.png?raw=true)
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/images/guide-3.png?raw=true)
+![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-1.png?raw=true)
+![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-2.png?raw=true)
+![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-3.png?raw=true)
 
 A practical use case is shown using the \textit{winequality} dataset from the KEEL repository. In this example we are interested in dividing the samples of the dataset into safe, borderline, rare and outlier. The following code example displays how to obtain this division with pycol by using the borderline complexity measure with the \textit{return\_all} parameter set to True:
 
