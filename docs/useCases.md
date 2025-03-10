@@ -98,14 +98,14 @@ A practical example is shown using an imbalanced credit card fraud detection dat
 
 The goal is to pick the most discriminant features using the F1 overlap measure. Figure \ref{fig:feature_sel} shows all features plotted according to their discriminant power.
 
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/Feature-selection-2.png?raw=true)
+![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/FeatureSelection.png?raw=true)
 
 As it is possible to observe that there are some features with low discriminant power (below 0.6), which can likely be removed from the dataset without losing too much performance.
 
-| First Header | Second Header |
-| ------------- | ------------- |
-| Content Cell | Content Cell |
-| Content Cell | Content Cell |
+| Dataset | Number of Features | Performance | 
+| ------------- | ------------- | ------------- |
+| Original Dataset | 30 | 0.8833 |
+| After Preprocessing | 21 & |.8633 |
 
 ### Code Example
 
