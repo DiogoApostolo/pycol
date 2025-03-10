@@ -90,6 +90,13 @@ print(O)
 
 ```
 
+| Sample Type | Percentage Maj. Class | Percentage Min. Class |
+| ------------- | ------------- | ------------- |
+| Safe | 0.9827 | 0.000 |
+| Borderline | 0.0173 | 0.0943 |
+| Rare |  0.0000 | 0.2075 |
+| Outlier |  0.000 | 0.6982 |
+
 ## Use Case III: Feature Selection
 
 Feature selection is critical for building efficient and interpretable models. Pycol can assist in this process by evaluating and ranking features based on their discriminative power using the feature metrics such as F1 or F1v. Using pycol’s complexity measures, we can assess each feature’s contribution to class separability and select the most relevant ones.
