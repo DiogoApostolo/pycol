@@ -5,7 +5,7 @@
 One practical use case of pycol is noise removal, particularly following synthetic data generation techniques like SMOTE
 (Synthetic Minority Oversampling Technique). SMOTE often generates new instances randomly, which can result in synthetic
 points in regions with high class overlap, introducing noise. By leveraging pycol’s overlap measures, we can identify
-and remove these noisy synthetic instances. A scatter plot before and after noise removal can be obtained to see the results of the process (Figure xx).
+and remove these noisy synthetic instances. A scatter plot before and after noise removal can be obtained to see the results of the process (Figure 1).
 
 <p>
 <img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-1.png" width=23% height=23%>
@@ -13,8 +13,11 @@ and remove these noisy synthetic instances. A scatter plot before and after nois
 <img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-3.png" width=23% height=23%>
 <img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-4.png" width=23% height=23%>
 </p>
+Figure 1: Example of Noise Removal. The Minority Class is represented in Blue and the Majority Class is represented in Red. New minority samples (Dark Blue) are generated and removed according to their degree of overlap.
 
 ### Code Example
+
+A pratical example using pycol is shown using the breast cancer dataset.
 
 ```python
 
@@ -64,11 +67,9 @@ print("% Reduction: " + str(1 - len(X_noise_removed)/len(X_res)))
 ```
 
 
-*Figure 1: Example of Noise Removal. The Minority Class is represented in Blue and the Majority Class is represented in Red. New minority samples (Dark Blue) are generated and removed according to their degree of overlap.
-
 ## Use Case II: Guided Oversampling
 
-Another valuable application is guided oversampling. Instead of applying a uniform oversampling strategy, we can use pycol to perform a more detailed oversampling based on the typology of safe, borderline, rare, and outlier instances, using the borderline metric. Specifically, pycol can be used to identify only one type of sample, for example the borderline samples, and use only these to generate new samples, instead of the entire dataset (Figure xx).
+Another valuable application is guided oversampling. Instead of applying a uniform oversampling strategy, we can use pycol to perform a more detailed oversampling based on the typology of safe, borderline, rare, and outlier instances, using the borderline metric. Specifically, pycol can be used to identify only one type of sample, for example the borderline samples, and use only these to generate new samples, instead of the entire dataset (Figure 2).
 
 
 <p float="left">
@@ -78,12 +79,12 @@ Another valuable application is guided oversampling. Instead of applying a unifo
 </p>
 
 
-
-
-A practical use case is shown using the winequality dataset from the KEEL repository. In this example we are interested in dividing the samples of the dataset into safe, borderline, rare and outlier. The following code example displays how to obtain this division with pycol by using the borderline complexity measure with the return_all parameter set to True:
+Figure 2: Example of Guided Oversampling. The Minority Class is represented in Blue and the Majority Class is represented in Red. After the samples near the decision boundary are found, the dataset is oversampled using only these samples.
 
 
 ### Code Example
+
+A practical use case is shown using the winequality dataset from the KEEL repository. In this example we are interested in dividing the samples of the dataset into safe, borderline, rare and outlier. The following code example displays how to obtain this division with pycol by using the borderline complexity measure with the return_all parameter set to True.
 
 ```python
 
@@ -116,18 +117,15 @@ Feature selection is critical for building efficient and interpretable models. P
 
 A practical example is shown using an imbalanced credit card fraud detection dataset, from the OpenML repository. This dataset contains 30 features, and it is likely many of them can be removed without significantly losing classification performance. 
 
-The goal is to pick the most discriminant features using the F1 overlap measure. Figure XX shows all features plotted according to their discriminant power.
+The goal is to pick the most discriminant features using the F1 overlap measure. Figure 3 shows all features plotted according to their discriminant power.
 
 ![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/FeatureSelection.png?raw=true)
 
 As it is possible to observe that there are some features with low discriminant power (below 0.6), which can likely be removed from the dataset without losing too much performance.
 
-| Dataset | Number of Features | Performance | 
-| ------------- | ------------- | ------------- |
-| Original Dataset | 30 | 0.8833 |
-| After Preprocessing | 21  |0.8633 |
-
 ### Code Example
+
+Using pycol we can do this by following this example:
 
 ```python
 
@@ -188,6 +186,11 @@ print(f1_orig)
 print(f1_reduced)
 
 ```
+
+| Dataset | Number of Features | Performance | 
+| ------------- | ------------- | ------------- |
+| Original Dataset | 30 | 0.8833 |
+| After Preprocessing | 21  |0.8633 |
 
 The results show that it's possible to use the F1 overlap measure for pre-processing, removing 9 features from the dataset without losing too much classification performance.
 
