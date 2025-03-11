@@ -5,7 +5,11 @@
 One practical use case of pycol is noise removal, particularly following synthetic data generation techniques like SMOTE
 (Synthetic Minority Oversampling Technique). SMOTE often generates new instances randomly, which can result in synthetic
 points in regions with high class overlap, introducing noise. By leveraging pycol’s overlap measures, we can identify
-and remove these noisy synthetic instances. A scatter plot before and after noise removal can be obtained to see the results of the process (Figure \ref{fig:noise-rem-1}).
+and remove these noisy synthetic instances. A scatter plot before and after noise removal can be obtained to see the results of the process (Figure xx).
+
+
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-1.png" width=50% height=50%>
+
 
 ![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-1.png?raw=true)
 ![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-2.png?raw=true)
@@ -66,13 +70,13 @@ print("% Reduction: " + str(1 - len(X_noise_removed)/len(X_res)))
 
 ## Use Case II: Guided Oversampling
 
-Another valuable application is guided oversampling. Instead of applying a uniform oversampling strategy, we can use pycol to perform a more detailed oversampling based on the typology of safe, borderline, rare, and outlier instances \citep{borderline}, using the borderline metric. Specifically, pycol can be used to identify only one type of sample, for example the borderline samples, and use only these to generate new samples, instead of the entire dataset (Figure \ref{fig:noise-rem}).
+Another valuable application is guided oversampling. Instead of applying a uniform oversampling strategy, we can use pycol to perform a more detailed oversampling based on the typology of safe, borderline, rare, and outlier instances, using the borderline metric. Specifically, pycol can be used to identify only one type of sample, for example the borderline samples, and use only these to generate new samples, instead of the entire dataset (Figure xx).
 
 ![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-1.png?raw=true)
 ![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-2.png?raw=true)
 ![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-3.png?raw=true)
 
-A practical use case is shown using the \textit{winequality} dataset from the KEEL repository. In this example we are interested in dividing the samples of the dataset into safe, borderline, rare and outlier. The following code example displays how to obtain this division with pycol by using the borderline complexity measure with the \textit{return\_all} parameter set to True:
+A practical use case is shown using the winequality dataset from the KEEL repository. In this example we are interested in dividing the samples of the dataset into safe, borderline, rare and outlier. The following code example displays how to obtain this division with pycol by using the borderline complexity measure with the return_all parameter set to True:
 
 
 ### Code Example
@@ -83,8 +87,8 @@ comp = Complexity(file_name="datasets/winequality.arff")
 
 B,S,R,O,C = comp.borderline(return_all=True,imb=True)
 
-print(B)
 print(S)
+print(B)
 print(R)
 print(O)
 
@@ -97,13 +101,18 @@ print(O)
 | Rare |  0.0000 | 0.2075 |
 | Outlier |  0.000 | 0.6982 |
 
+From these results, it is possible to observe that, for the minority class, there are many samples in the Outlier Class,
+specifically about 70%. Oversampling this dataset uniformly would create many samples in the overlapped area, due to the
+outlier samples. Performing oversampling just for borderline and rare samples in this case would be more beneficial, as it
+would give visibility to the minority class without drastically increasing the overlapped area.
+
 ## Use Case III: Feature Selection
 
 Feature selection is critical for building efficient and interpretable models. Pycol can assist in this process by evaluating and ranking features based on their discriminative power using the feature metrics such as F1 or F1v. Using pycol’s complexity measures, we can assess each feature’s contribution to class separability and select the most relevant ones.
 
 A practical example is shown using an imbalanced credit card fraud detection dataset, from the OpenML repository. This dataset contains 30 features, and it is likely many of them can be removed without significantly losing classification performance. 
 
-The goal is to pick the most discriminant features using the F1 overlap measure. Figure \ref{fig:feature_sel} shows all features plotted according to their discriminant power.
+The goal is to pick the most discriminant features using the F1 overlap measure. Figure XX shows all features plotted according to their discriminant power.
 
 ![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/FeatureSelection.png?raw=true)
 
@@ -189,7 +198,7 @@ In the following practical example, we show how complexity metrics can be used t
 
 To do this, we use two groups of datasets, one with low structural complexity (ONB lower than 0.3) and one with very high structural complexity (ONB higher than 0.7). For both groups of datasets, several pre-processing techniques are applied, which can be divided into three groups. The first group composed of three oversampling algorithms, the most popular oversampling technique, SMOTE and two of its most popular variants Borderline SMOTE and SMOTE-ENN. Group two, contains two popular undersampling techniques, Random Undersampling (RUS) and Repeated Edited Nearest Neighbours (REEN). Finally, group three contains two oversampling techniques that take into account the structural properties of the dataset: Graph SMOTE and MWMOTE.
 
-Following this, the F-Measure of a kNN classifier is calculated on the original dataset and on the dataset after preprocessing, and the difference between these two values is calculated. The results on the two groups of datasets can be found in Table \ref{tab:oversample_test}, showing that:
+Following this, the F-Measure of a kNN classifier is calculated on the original dataset and on the dataset after preprocessing, and the difference between these two values is calculated. The results on the two groups of datasets can be found in Table xx, showing that:
 
 
 1. For the datasets of low complexity, preprocessing does not show any improvement, on the contrary, in some cases it even shows a significant decrease;
@@ -314,6 +323,10 @@ print(high_metric_df[['SMOTE','RUS','REEN','EEN','Borderline','GRAPH','MWMOTE']]
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |     
 | ONB < 0.3 | -0.009 | -0.0260 | -0.006  | -0.1648 | -0.0493 | -0.0310 |  0.0090 |
 | ONB > 0.7 | 0.1002 | 0.1280  |  0.1245 |   0.0692| 0.1744  |0.1432   | 0.1572  |
+
+This type of analysis can be done for other measures of the structural family, which if coupled with measures
+from other families can offer an even more complete picture of the dataset characteristics and aid in the choice of both
+preprocessing and classification algorithms.
 
 
 ## Use Case V: Performance Selection
