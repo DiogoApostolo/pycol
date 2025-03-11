@@ -8,10 +8,10 @@ points in regions with high class overlap, introducing noise. By leveraging pyco
 and remove these noisy synthetic instances. A scatter plot before and after noise removal can be obtained to see the results of the process (Figure xx).
 
 <p float="left">
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-1.png" width=20% height=20%>
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-2.png" width=20% height=20%>
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-3.png" width=20% height=20%>
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-4.png" width=20% height=20%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-1.png" width=25% height=25%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-2.png" width=24% height=24%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-3.png" width=25% height=25%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-4.png" width=25% height=25%>
 </p>
 
 ### Code Example
