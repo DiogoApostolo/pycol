@@ -70,9 +70,15 @@ print("% Reduction: " + str(1 - len(X_noise_removed)/len(X_res)))
 
 Another valuable application is guided oversampling. Instead of applying a uniform oversampling strategy, we can use pycol to perform a more detailed oversampling based on the typology of safe, borderline, rare, and outlier instances, using the borderline metric. Specifically, pycol can be used to identify only one type of sample, for example the borderline samples, and use only these to generate new samples, instead of the entire dataset (Figure xx).
 
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-1.png?raw=true)
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-2.png?raw=true)
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-3.png?raw=true)
+
+<p float="left">
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-1.png" width=25% height=25%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-2.png" width=25% height=25%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-3.png" width=25% height=25%>
+</p>
+
+
+
 
 A practical use case is shown using the winequality dataset from the KEEL repository. In this example we are interested in dividing the samples of the dataset into safe, borderline, rare and outlier. The following code example displays how to obtain this division with pycol by using the borderline complexity measure with the return_all parameter set to True:
 
