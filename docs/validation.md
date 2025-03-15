@@ -8,7 +8,7 @@ In order to confirm the validity of the implemented measures, several validation
 
 The artificial datasets were created using the data generator introduced in https://github.com/sysmon37/datagenerator/tree/newsampling. With this generator, it is possible to create data clusters of variable size and topology. The generator divides the creation of samples in multiple regions and the number of regions, their size, shape and location can all be configured by the user. For each type of shape available, there is an algorithm that uniformly fills the area inside this region with safe and borderline samples. Afterwards, the area around the region is populated with rare and outlier examples.
 
-Results for the first group of measures were compared with 150 datasets of the KEEL repository. The characteristics of these datasets are shown in Table XX. The datasets were chosen to have a varying number of instances (from 205 to 2200) and features (from 4 to 7), as well as binary and non-binary classification problems. For non-binary datasets, the OvO results are summarized using a mean.
+Results for the first group of measures were compared with 150 datasets of the KEEL repository. The characteristics of these datasets are shown in following table. The datasets were chosen to have a varying number of instances (from 205 to 2200) and features (from 4 to 7), as well as binary and non-binary classification problems. For non-binary datasets, the OvO results are summarized using a mean.
 
 |Name | #Samples | #Features | #Classes |
 | ------------- | ------------- | ------------- | ------------- |     
@@ -117,7 +117,7 @@ Afterwards, a second set of more complex artificial datasets was used, which wer
 </p>
 
 
-As most of the experimented metrics take into account the local region around each sample, it is expected that the values for the measures will represent lower complexity, since as seen in Figure XX these datasets present low local overlap, with very well-defined clusters. An exception is input noise, which is a feature based metric and should have high values, since none of the two features is able to linearly separate any of the datasets. The results of these experiments are presented bellow and are within expectations, as most of the measures indicate a low complexity. The measures between 0 and 1 are lower than 0.5, when 1 represents high complexity and higher than 0.5 when 1 represents low complexity.  Also, as expected, input noise, being a feature based metric, gives very high values, representing high complexity. The two measures that got results which defied expectations were purity and neighbourhood separability, which both have similar formulations. However, being multi-resolution metrics, this result is most likely due to the need for better parametrization, which is very dataset dependent.
+As most of the experimented metrics take into account the local region around each sample, it is expected that the values for the measures will represent lower complexity, since as seen in the figures these datasets present low local overlap, with very well-defined clusters. An exception is input noise, which is a feature based metric and should have high values, since none of the two features is able to linearly separate any of the datasets. The results of these experiments are presented bellow and are within expectations, as most of the measures indicate a low complexity. The measures between 0 and 1 are lower than 0.5, when 1 represents high complexity and higher than 0.5 when 1 represents low complexity.  Also, as expected, input noise, being a feature based metric, gives very high values, representing high complexity. The two measures that got results which defied expectations were purity and neighbourhood separability, which both have similar formulations. However, being multi-resolution metrics, this result is most likely due to the need for better parametrization, which is very dataset dependent.
 
 
 | Measure       | Value 1   | Value 2   | Value 3   | Value 4   |
@@ -144,7 +144,7 @@ The values for both experiments can be obtained by running the code below:
 ```python
 
 
-folder = "dataset/group_two_part_one/"  ## "dataset/group_two_part_two/" change to get the results from Table XX or Table XX
+folder = "dataset/group_two_part_one/"  ## "dataset/group_two_part_two/" change to get the results from the first or second table
 onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f))]
 onlyfiles.sort(reverse=True)
 
