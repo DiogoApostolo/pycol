@@ -6,7 +6,7 @@ In order to confirm the validity of the implemented measures, several validation
 
 ## Group I Datasets
 
-The artificial datasets were created using the data generator introduced in XX. With this generator, it is possible to create data clusters of variable size and topology. The generator divides the creation of samples in multiple regions and the number of regions, their size, shape and location can all be configured by the user. For each type of shape available, there is an algorithm that uniformly fills the area inside this region with safe and borderline samples. Afterwards, the area around the region is populated with rare and outlier examples.
+The artificial datasets were created using the data generator introduced in https://github.com/sysmon37/datagenerator/tree/newsampling. With this generator, it is possible to create data clusters of variable size and topology. The generator divides the creation of samples in multiple regions and the number of regions, their size, shape and location can all be configured by the user. For each type of shape available, there is an algorithm that uniformly fills the area inside this region with safe and borderline samples. Afterwards, the area around the region is populated with rare and outlier examples.
 
 Results for the first group of measures were compared with 150 datasets of the KEEL repository. The characteristics of these datasets are shown in Table XX. The datasets were chosen to have a varying number of instances (from 205 to 2200) and features (from 4 to 7), as well as binary and non-binary classification problems. For non-binary datasets, the OvO results are summarized using a mean.
 
@@ -18,7 +18,7 @@ Results for the first group of measures were compared with 150 datasets of the K
 | titanic      |2200  | 4   | 2  |
 
 
-The results of the validation of the first group can be found in Table XX. All measures except from F1 and N2 obtain the exact same result in both packages for every dataset, indicating the implementation is indeed valid. As for F1, the difference in results is due to a slight change in the implementation where the means of each feature is not normalized, justifying variations between both approaches. Finally, for N2 the differences are also very small between the two packages, which is likely due to the default distance metrics used in each one of them, which are slightly different in terms of normalization.
+The results of the validation of the first group can be found in table bellow. All measures except from F1 and N2 obtain the exact same result in both packages for every dataset, indicating the implementation is indeed valid. As for F1, the difference in results is due to a slight change in the implementation where the means of each feature is not normalized, justifying variations between both approaches. Finally, for N2 the differences are also very small between the two packages, which is likely due to the default distance metrics used in each one of them, which are slightly different in terms of normalization.
 
 
 | Measure | pycol (newthyroid) | pymfe (newthyroid) | pycol (ecoli) | pymfe (ecoli) | pycol (balance) | pymfe (balance) | pycol (titanic) | pymfe (titanic) |
@@ -41,7 +41,7 @@ A code example of how to generate these values in pycol is also provided:
 ```python
 
 
-folder = "XX/"
+folder = "dataset/group_one/"
 onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f))]
 onlyfiles.sort(reverse=True)
 
@@ -63,17 +63,17 @@ for file in onlyfiles:
 
 ## Group II Datasets
 
-For the second group of measures, two sets of tests were made. The first set of tests starts by creating two clusters of different classes with 750 samples each. The overlapped region between these clusters is increased until the two clusters are completely overlapped (Figure XX). 
+For the second group of measures, two sets of tests were made. The first set of tests starts by creating two clusters of different classes with 750 samples each. The overlapped region between these clusters is increased until the two clusters are completely overlapped. 
 
 
 <p float="left">
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/no_overlap.png" width=20% height=20%>
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/some_overlap.png" width=20% height=20%>
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/lot_overlap.png" width=20% height=20%>
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/full_overlap.png" width=20% height=20%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/no_overlap.png" width=30% height=30%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/some_overlap.png" width=30% height=30%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/lot_overlap.png" width=30% height=30%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/full_overlap.png" width=30% height=30%>
 </p>
 
-Ideally, if the complexity measures are implemented correctly, their values will indicate a higher complexity as the overlapped region increases. Results for the second group of metrics in each of the artificial datasets are presented in Table XX. 
+Ideally, if the complexity measures are implemented correctly, their values will indicate a higher complexity as the overlapped region increases. Results for the second group of metrics in each of the artificial datasets are presented in the table bellow. 
 
 
 | Measure       | Test 1   | Test 2   | Test 3   | Test 4   |
@@ -97,7 +97,7 @@ Ideally, if the complexity measures are implemented correctly, their values will
 Overall, the results show that all the metrics behave according to the expected, as when the overlapped region increases, their values increase too. A notable exception to this rule are the SI, purity and neighbourhood separability measures, however these measures work differently from the rest where smaller values indicate higher complexity, so the values presented still indicate that the implementation is valid. 
 
 
-Afterwards, a second set of more complex artificial datasets was used, which were taken from XX. Table XX presents the characteristics of the datasets and a 2D view of the datasets is presented in Figure XX. 
+Afterwards, a second set of more complex artificial datasets was used, which were taken from https://github.com/sysmon37/datagenerator/tree/newsampling. The following table  presents the characteristics of the datasets and a 2D view of the datasets is presented as well. 
 
 
 
@@ -110,14 +110,14 @@ Afterwards, a second set of more complex artificial datasets was used, which wer
 
 
 <p float="left">
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/circles2d.png" width=20% height=20%>
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/spheres2d.png" width=20% height=20%>
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/paw2d.png" width=20% height=20%>
-<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/paw3d.png" width=20% height=20%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/circles2d.png" width=30% height=30%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/spheres2d.png" width=30% height=30%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/paw2d.png" width=30% height=30%>
+<img src="https://github.com/DiogoApostolo/pycol/blob/main/docs/images/paw3d.png" width=30% height=30%>
 </p>
 
 
-As most of the experimented metrics take into account the local region around each sample, it is expected that the values for the measures will represent lower complexity, since as seen in Figure XX these datasets present low local overlap, with very well-defined clusters. An exception is input noise, which is a feature based metric and should have high values, since none of the two features is able to linearly separate any of the datasets. The results of these experiments are presented in Table XX and are within expectations, as most of the measures indicate a low complexity. The measures between 0 and 1 are lower than 0.5, when 1 represents high complexity and higher than 0.5 when 1 represents low complexity.  Also, as expected, input noise, being a feature based metric, gives very high values, representing high complexity. The two measures that got results which defied expectations were purity and neighbourhood separability, which both have similar formulations. However, being multi-resolution metrics, this result is most likely due to the need for better parametrization, which is very dataset dependent.
+As most of the experimented metrics take into account the local region around each sample, it is expected that the values for the measures will represent lower complexity, since as seen in Figure XX these datasets present low local overlap, with very well-defined clusters. An exception is input noise, which is a feature based metric and should have high values, since none of the two features is able to linearly separate any of the datasets. The results of these experiments are presented bellow and are within expectations, as most of the measures indicate a low complexity. The measures between 0 and 1 are lower than 0.5, when 1 represents high complexity and higher than 0.5 when 1 represents low complexity.  Also, as expected, input noise, being a feature based metric, gives very high values, representing high complexity. The two measures that got results which defied expectations were purity and neighbourhood separability, which both have similar formulations. However, being multi-resolution metrics, this result is most likely due to the need for better parametrization, which is very dataset dependent.
 
 
 | Measure       | Value 1   | Value 2   | Value 3   | Value 4   |
@@ -144,7 +144,7 @@ The values for both experiments can be obtained by running the code below:
 ```python
 
 
-folder = "XX/"  ## "XX/" change to get the results from Table XX or Table XX
+folder = "dataset/group_two_part_one/"  ## "dataset/group_two_part_two/" change to get the results from Table XX or Table XX
 onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f))]
 onlyfiles.sort(reverse=True)
 
