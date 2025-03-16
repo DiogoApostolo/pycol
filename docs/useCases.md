@@ -335,6 +335,9 @@ From the results the following conclusions are presented:
 This type of analysis can be done for other measures of the structural family, which if coupled with measures from other families can offer an even more complete picture of the dataset characteristics and aid in the choice of both preprocessing and classification algorithms.
 
 
-## Use Case V: Performance Selection
+## Use Case V: Performance Benchmarking
 
 Performance benchmarking involves comparing the effectiveness of different models or algorithms on a given dataset. Pycol can enhance this process by providing a detailed understanding of the dataset’s complexity, allowing for more nuanced benchmarking. When benchmarking models, it’s essential to consider not just the raw performance metrics (like accuracy, precision, recall) but also how these models interact with the inherent complexities of the dataset. Pycol enables this deeper analysis.
+
+This repository presents a csv file (Benchmark.csv) with complexity measurements for 150+ datasets. In particular, this file showcases several datasets with different types of overlap complexity. Based on these measurements, a user can choose the type of classifier that's more appropriate for each dataset. For example, datasets with low local complexity will yield better results with neighbourhood based classifiers like kNN. 
+
