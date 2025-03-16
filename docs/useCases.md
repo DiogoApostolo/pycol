@@ -205,16 +205,11 @@ In the following practical example, we show how complexity metrics can be used t
 
 To do this, we use two groups of datasets, one with low structural complexity (ONB lower than 0.3) and one with very high structural complexity (ONB higher than 0.7). For both groups of datasets, several pre-processing techniques are applied, which can be divided into three groups. The first group composed of three oversampling algorithms, the most popular oversampling technique, SMOTE and two of its most popular variants Borderline SMOTE and SMOTE-ENN. Group two, contains two popular undersampling techniques, Random Undersampling (RUS) and Repeated Edited Nearest Neighbours (REEN). Finally, group three contains two oversampling techniques that take into account the structural properties of the dataset: Graph SMOTE and MWMOTE.
 
-Following this, the F-Measure of a kNN classifier is calculated on the original dataset and on the dataset after preprocessing, and the difference between these two values is calculated. The results on the two groups of datasets can be found in Table xx, showing that:
+Following this, the F-Measure of a kNN classifier is calculated on the original dataset and on the dataset after preprocessing, and the difference between these two values is calculated. 
 
-
-1. For the datasets of low complexity, preprocessing does not show any improvement, on the contrary, in some cases it even shows a significant decrease;
-
-2. The datasets with high structural complexity, almost always benefit from pre-processing, however undersampling techniques such as RENN or oversampling techniques that take into account the structural properties of the dataset like Graph SMOTE and MWMOTE, tend to perform the best.
-
-This type of analysis can be done for other measures of the structural family, which if coupled with measures from other families can offer an even more complete picture of the dataset characteristics and aid in the choice of both preprocessing and classification algorithms.
 
 ### Code Example
+
 
 ```python
 
@@ -331,9 +326,13 @@ print(high_metric_df[['SMOTE','RUS','REEN','EEN','Borderline','GRAPH','MWMOTE']]
 | ONB < 0.3 | -0.009 | -0.0260 | -0.006  | -0.1648 | -0.0493 | -0.0310 |  0.0090 |
 | ONB > 0.7 | 0.1002 | 0.1280  |  0.1245 |   0.0692| 0.1744  |0.1432   | 0.1572  |
 
-This type of analysis can be done for other measures of the structural family, which if coupled with measures
-from other families can offer an even more complete picture of the dataset characteristics and aid in the choice of both
-preprocessing and classification algorithms.
+From the results the following conclusions are presented:
+
+1. For the datasets of low complexity, preprocessing does not show any improvement, on the contrary, in some cases it even shows a significant decrease;
+
+2. The datasets with high structural complexity, almost always benefit from pre-processing, however undersampling techniques such as RENN or oversampling techniques that take into account the structural properties of the dataset like Graph SMOTE and MWMOTE, tend to perform the best.
+
+This type of analysis can be done for other measures of the structural family, which if coupled with measures from other families can offer an even more complete picture of the dataset characteristics and aid in the choice of both preprocessing and classification algorithms.
 
 
 ## Use Case V: Performance Selection
