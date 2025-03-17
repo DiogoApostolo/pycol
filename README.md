@@ -109,3 +109,4 @@ The project is licensed under the MIT License - see the [License](https://github
 
 ## Acknowledgements:
 Some complexity measures implemented on `pycol` are based on the implementation of `pymfe`. We also thank José Daniel Pascual-Triana for providing the implementation of ONB.
+
