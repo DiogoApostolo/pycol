@@ -8,10 +8,10 @@ points in regions with high class overlap, introducing noise. By leveraging pyco
 and remove these noisy synthetic instances. A scatter plot before and after noise removal can be obtained to see the results of the process (Figure xx).
 
 
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-1.png?raw=true){: width='40%' height='40%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-2.png?raw=true){: width='40%' height='40%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-3.png?raw=true){: width='40%' height='40%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/SMOTE-4.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/SMOTE-1.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/SMOTE-2.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/SMOTE-3.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/SMOTE-4.png?raw=true){: width='40%' height='40%'}
 
 Figure 1: Example of Noise Removal. The Minority Class is represented in Blue and the Majority Class is represented in Red. New minority samples (Dark Blue) are generated and removed according to their degree of overlap.
 
@@ -72,9 +72,9 @@ print("% Reduction: " + str(1 - len(X_noise_removed)/len(X_res)))
 Another valuable application is guided oversampling. Instead of applying a uniform oversampling strategy, we can use pycol to perform a more detailed oversampling based on the typology of safe, borderline, rare, and outlier instances, using the borderline metric. Specifically, pycol can be used to identify only one type of sample, for example the borderline samples, and use only these to generate new samples, instead of the entire dataset (Figure 2).
 
 
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-1.png?raw=true){: width='30%' height='30%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-2.png?raw=true){: width='30%' height='30%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/guide-3.png?raw=true){: width='30%' height='30%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/guide-1.png?raw=true){: width='30%' height='30%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/guide-2.png?raw=true){: width='30%' height='30%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/guide-3.png?raw=true){: width='30%' height='30%'}
 
 Figure 2: Example of Guided Oversampling. The Minority Class is represented in Blue and the Majority Class is represented in Red. After the samples near the decision boundary are found, the dataset is oversampled using only these samples.
 
@@ -118,7 +118,7 @@ A practical example is shown using an imbalanced credit card fraud detection dat
 
 The goal is to pick the most discriminant features using the F1 overlap measure. Figure 3 shows all features plotted according to their discriminant power.
 
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/FeatureSelection.png?raw=true)
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/FeatureSelection.png?raw=true)
 
 Figure 3: Discriminant Power of the Features of the credit card fraud Dataset
 
