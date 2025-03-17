@@ -65,10 +65,10 @@ for file in onlyfiles:
 
 For the second group of measures, two sets of tests were made. The first set of tests starts by creating two clusters of different classes with 750 samples each. The overlapped region between these clusters is increased until the two clusters are completely overlapped. 
 
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/no_overlap.png?raw=true){: width='40%' height='40%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/some_overlap.png?raw=true){: width='40%' height='40%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/lot_overlap.png?raw=true){: width='40%' height='40%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/full_overlap.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/no_overlap.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/some_overlap.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/lot_overlap.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/full_overlap.png?raw=true){: width='40%' height='40%'}
 
 
 
@@ -111,10 +111,10 @@ Afterwards, a second set of more complex artificial datasets was used, which wer
 
 
 
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/circles2d.png?raw=true){: width='40%' height='40%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/spheres2d.png?raw=true){: width='40%' height='40%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/paw2d.png?raw=true){: width='40%' height='40%'}
-![alt text](https://github.com/DiogoApostolo/pycol/blob/main/docs/images/paw3d.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/circles2d.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/spheres2d.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/paw2d.png?raw=true){: width='40%' height='40%'}
+![alt text](https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/paw3d.png?raw=true){: width='40%' height='40%'}
 
 
 
