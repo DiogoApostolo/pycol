@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="A Python Class Overlap Library">
+        <meta name="author" content="DiogoApostolo">
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>pycol</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="assets/_mkdocstrings.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body class="homepage">
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href=".">pycol</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="." class="nav-link active" aria-current="page">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="useCases/" class="nav-link">Use Cases</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="validation/" class="nav-link">Validation</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" class="nav-link disabled">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="useCases/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://github.com/DiogoApostolo/pycol" class="nav-link">DiogoApostolo/pycol</a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#pycol-python-class-overlap-library" class="nav-link">pycol: Python Class Overlap Library</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#instalation" class="nav-link">Instalation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#usage-example" class="nav-link">Usage Example:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#developer-notes" class="nav-link">Developer notes:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#licence" class="nav-link">Licence:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#acknowledgements" class="nav-link">Acknowledgements:</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<p><a href="https://github.com/dwyl/esta/issues"><img alt="contributions welcome" src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" /></a></p>
+<h1 id="pycol-python-class-overlap-library">pycol: Python Class Overlap Library</h1>
+<p>The Python Class Overlap Library (<code>pycol</code>) assembles a set of data complexity measures associated to the problem of class overlap. </p>
+<p>The combination of class imbalance and overlap is currently one of the most challenging issues in machine learning. However, the identification and characterisation of class overlap in imbalanced domains is a subject that still troubles researchers in the field as, to this point, there is no clear, standard, well-formulated definition and measurement of class overlap for real-world domains.</p>
+<p>This library characterises the problem of class overlap according to multiple sources of complexity, where four main class overlap representations are acknowledged: <strong>Feature Overlap</strong>, <strong>Instance Overlap</strong>, <strong>Structural Overlap</strong>, and <strong>Multiresolution Overlap</strong>.</p>
+<p>Existing open-source implementations of complexity measures include the <a href="https://github.com/nmacia/dcol">DCoL</a> (C++), <a href="https://github.com/lpfgarcia/ECoL">ECoL</a>, and the recent <a href="https://github.com/victorhb/ImbCoL">ImbCoL</a>, <a href="https://github.com/lpfgarcia/SCoL">SCoL</a>, and <a href="https://github.com/rivolli/mfe">mfe</a> packages (R code). There is also 
+<a href="https://github.com/ealcobaca/pymfe">pymfe</a> in Python. Regarding class overlap measures, these packages consider the implementation of the following: F1, F1v, F2, F3, F4, N1, N2, N3, N4, T1 and LSCAvg. <code>ImbCoL</code> further provides a decomposition by class of the original measures and <code>SCoL</code> focuses on simulated complexity measures. In order to foster the study of a more comprehensive set of measures of class overlap, we provide an extended Python library, comprising the class overlap measures included in the previous packages, as well as an additional set of measures proposed in recent years. Furthermore, this library implements additional adaptations of complexity measures to class imbalance. </p>
+<p>Overall, <code>pycol</code> characterises class overlap as a heterogeneous concept, comprising distinct sources of complexity, and the following measures are implemented:</p>
+<h4 id="feature-overlap">Feature Overlap:</h4>
+<ul>
+<li><strong>F1:</strong> Maximum Fisher's Discriminat Ratio</li>
+<li><strong>F1v:</strong> Directional Vector Maximum Fisher's Discriminat Ratio</li>
+<li><strong>F2:</strong> Volume of Overlapping Region</li>
+<li><strong>F3:</strong> Maximum Individual Feature Efficiency</li>
+<li><strong>F4:</strong> Collective Feature Efficiency</li>
+<li><strong>IN:</strong> Input Noise</li>
+</ul>
+<h4 id="instance-overlap">Instance Overlap:</h4>
+<ul>
+<li><strong>R-value</strong></li>
+<li><strong>Raug:</strong> Augmented R-value</li>
+<li><strong>degOver</strong></li>
+<li><strong>N3:</strong> Error Rate of the Nearest Neighbour Classifier</li>
+<li><strong>SI:</strong> Separability Index</li>
+<li><strong>N4:</strong> Non-Linearity of the Nearest Neighbour Classifier</li>
+<li><strong>kDN:</strong> K-Disagreeing Neighbours</li>
+<li><strong>D3:</strong> Class Density in the Overlap Region</li>
+<li><strong>CM:</strong> Complexity Metric Based on k-nearest neighbours</li>
+<li><strong>wCM:</strong> Weighted Complexity Metric</li>
+<li><strong>dwCM:</strong> Dual Weighted Complexity Metric</li>
+<li><strong>Borderline Examples</strong></li>
+<li><strong>IPoints:</strong> Number of Invasive Points</li>
+</ul>
+<h4 id="structural-overlap">Structural Overlap:</h4>
+<ul>
+<li><strong>N1:</strong> Fraction of Borderline Points</li>
+<li><strong>T1:</strong> Fraction of Hyperspheres Covering Data</li>
+<li><strong>Clst:</strong> Number of Clusters</li>
+<li><strong>ONB:</strong> Overlap Number of Balls</li>
+<li><strong>LSCAvg:</strong> Local Set Average Cardinality</li>
+<li><strong>DBC:</strong> Decision Boundary Complexity</li>
+<li><strong>N2:</strong> Ratio of Intra/Extra Class Nearest Neighbour Distance</li>
+<li><strong>NSG:</strong> Number of samples per group</li>
+<li><strong>ICSV:</strong> Inter-class scale variation</li>
+</ul>
+<h4 id="multiresolution-overlap">Multiresolution Overlap:</h4>
+<ul>
+<li><strong>MRCA:</strong> Multiresolution Complexity Analysis</li>
+<li><strong>C1:</strong> Case Base Complexity Profile</li>
+<li><strong>C2:</strong> Similarity-Weighted Case Base Complexity Profile</li>
+<li><strong>Purity</strong></li>
+<li><strong>Neighbourhood Separability</strong></li>
+</ul>
+<h2 id="instalation">Instalation</h2>
+<p>All packages required to run pycol are listed in the requirements.txt file. 
+To install all needed pacakges run:</p>
+<p><code>pip install -r requirements.txt</code></p>
+<p>The package is also available for instalation through pypi: https://pypi.org/project/pycol-complexity/</p>
+<h2 id="usage-example">Usage Example:</h2>
+<p>The <code>dataset</code> folder contains some datasets with binary and multi-class problems. All datasets are numerical and have no missing values. The <code>complexity.py</code> module implements the complexity measures.
+To run the measures, the <code>Complexity</code> class is instantiated and the results may be obtained as follows:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">complexity</span> <span class="kn">import</span> <span class="n">Complexity</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">complexity</span> <span class="o">=</span> <span class="n">Complexity</span><span class="p">(</span><span class="s2">&quot;dataset/61_iris.arff&quot;</span><span class="p">,</span><span class="n">distance_func</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span><span class="n">file_type</span><span class="o">=</span><span class="s2">&quot;arff&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Feature Overlap</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">F1</span><span class="p">())</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">F1v</span><span class="p">())</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">F2</span><span class="p">())</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># (...)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Instance Overlap</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">R_value</span><span class="p">())</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">deg_overlap</span><span class="p">())</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">CM</span><span class="p">())</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># (...)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Structural Overlap</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">N1</span><span class="p">())</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">T1</span><span class="p">())</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">Clust</span><span class="p">())</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># (...)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Multiresolution Overlap</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">MRCA</span><span class="p">())</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">C1</span><span class="p">())</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nb">print</span><span class="p">(</span><span class="n">complexity</span><span class="o">.</span><span class="n">purity</span><span class="p">())</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># (...)</span>
+</code></pre></div>
+<h2 id="developer-notes">Developer notes:</h2>
+<p>To submit bugs and feature requests, report at <a href="https://github.com/DiogoApostolo/pycol/issues">project issues</a>.</p>
+<h2 id="licence">Licence:</h2>
+<p>The project is licensed under the MIT License - see the <a href="https://github.com/DiogoApostolo/pycol/blob/main/LICENCE">License</a> file for details.</p>
+<h2 id="acknowledgements">Acknowledgements:</h2>
+<p>Some complexity measures implemented on <code>pycol</code> are based on the implementation of <code>pymfe</code>. We also thank José Daniel Pascual-Triana for providing the implementation of ONB.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2025-03-17 17:36:24.723215+00:00
+-->

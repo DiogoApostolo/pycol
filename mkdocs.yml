@@ -1,0 +1,43 @@
+site_name: pycol
+site_description: A Python Class Overlap Library
+site_author: DiogoApostolo
+repo_name: DiogoApostolo/pycol
+repo_url: https://github.com/DiogoApostolo/pycol
+edit_uri: ""
+use_directory_urls: true
+watch:
+  - src
+
+nav:
+  - Home: index.md  
+  - Use Cases: useCases.md
+  - Validation: validation.md
+  
+  
+
+theme:
+  name: mkdocs # material, readthedocs, mkdocs
+  features:
+    - navigation.top
+    - navigation.expand
+    # - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+  - admonition
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
+  - mkdocs-jupyter:
+      execute: False
+  - mkdocstrings:
+      default_handler: python
