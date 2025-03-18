@@ -7,6 +7,7 @@ import arff
 from sklearn.calibration import LabelEncoder
 from sklearn.cluster import KMeans
 import sklearn
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import DistanceMetric
 import sklearn.pipeline
 import scipy.spatial
@@ -18,6 +19,8 @@ import matplotlib.pyplot as plt
 import pickle
 
 from sklearn.decomposition import PCA
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 
 
 
@@ -31,7 +34,7 @@ class Complexity:
 
     '''
 
-    def __init__(self,file_name,distance_func="default",file_type="arff"):
+    def __init__(self,file_name="",distance_func="default",file_type="arff",dataset=None):
         '''
         Constructor method, setups up the the necessary class attributes to be
         used by the complexity measure functions.
@@ -53,10 +56,18 @@ class Complexity:
             [X,y,meta]=self.__prepare_array(file_name)
         elif(file_type=="csv"):
             [X,y,meta]=self.__read_csv(file_name)
-        else:
-            print("Only arff and pickle files are available for now")
-            return
+        elif(file_type=="array"):
+            X = np.array(dataset['X'])
+            y = np.array(dataset['y'])
 
+            if('meta' in dataset):
+                meta = dataset['meta']
+            else:
+                meta = self.is_categorical(X)
+        else:
+            print("Only arff, pickle or csv files are available for now")
+            return
+        
         self.X=np.array(X)
       
         self.y=np.array(y)
@@ -64,12 +75,15 @@ class Complexity:
 
         self.classes = classes
         self.meta=meta
+        
+        
+        
         self.dist_matrix,self.unnorm_dist_matrix = self.__calculate_distance_matrix(self.X,distance_func=distance_func)
         
         
 
         
-        self.class_count = self.__count_class_instances()
+        self.class_count = self.__count_class_instances(self.y)
 
 
         self.class_inxs = self.__get_class_inxs()
@@ -93,17 +107,20 @@ class Complexity:
     
     
     
-    def __count_class_instances(self):
+    def __count_class_instances(self,y):
         '''
         Is called by the __init__ method.
         Count instances of each class in the dataset.
+        --------
+        Parameters:
+        y (numpy.array): An array with the class labels of all samples in the dataset
         --------
         Returns:
         class_count (numpy.array): An (Nx1) array with the number of intances for each of the N classes in the dataset 
         '''
         class_count = np.zeros(len(self.classes))
         for i in range(len(self.classes)):
-            count=len(np.where(self.y == self.classes[i])[0])
+            count=len(np.where(y == self.classes[i])[0])
             class_count[i]+=count
         return class_count
     
@@ -240,7 +257,7 @@ class Complexity:
 
         #for every attribute check if it is numeric or categorical
         for i in range(len(att)-1):
-            if(att[i][1]=="NUMERIC" or att[i][1]=="REAL"):
+            if(att[i][1]=="NUMERIC" or att[i][1]=="REAL" or att[i][1]=="INTEGER"):
                 meta.append(0)
             else:
                 meta.append(1)
@@ -337,7 +354,7 @@ class Complexity:
 
                 unnorm_dist_matrix[i][j]=np.sqrt(unnorm_dist)
                 unnorm_dist_matrix[j][i]=np.sqrt(unnorm_dist)
-   
+            #print(i)
         return dist_matrix,unnorm_dist_matrix
 
     def __distance_HEOM_different_arrays(self,X,X2):
@@ -566,6 +583,39 @@ class Complexity:
                 else:
                     n_minus+=line[i]
         return [n_minus,n_plus]
+    
+    def svm_reduction(self,kernel='rbf',gamma=0.1,C=100.0):
+        
+        svm = SVC(kernel=kernel, gamma=gamma, C=C)
+
+        # Train the classifier
+        svm.fit(self.X, self.y)
+        class_count_reduced = self.__count_class_instances(self.y[svm.support_])
+        class_count = self.__count_class_instances(self.y)
+        reduction = 1-np.divide(class_count_reduced,class_count)
+    
+        return reduction
+
+    def tree_depth(self,tree_type="DT",n_estimators=100):
+
+        if(tree_type=="RF"):
+            rf = RandomForestClassifier(n_estimators=n_estimators, random_state=42)
+            rf.fit(self.X, self.y)
+
+            # Check the depth of each tree in the forest
+            tree_depths = [estimator.tree_.max_depth for estimator in rf.estimators_]
+            
+            avg_tree_depth = sum(tree_depths) / len(tree_depths)
+            
+            return avg_tree_depth
+        
+        elif(tree_type=="DT"):
+            dt = DecisionTreeClassifier()
+            dt.fit(self.X, self.y)
+
+            # Check the depth of the tree
+            tree_depth = dt.get_depth()
+            return tree_depth
 
 
     
@@ -2450,7 +2500,48 @@ class Complexity:
         self.metrics['feature']['f3'] = f3s 
         return f3s
     
-    
+    def F4_optimized(self,imb=False):
+        f4s=[]
+        #one vs one method
+        for i2 in range(len(self.class_inxs)):
+            for j2 in range(i2+1,len(self.class_inxs)):
+            
+                c1_inds = self.class_inxs[i2]
+                c2_inds = self.class_inxs[j2]
+                
+                sample_c1 = self.X[c1_inds]
+                sample_c2 = self.X[c2_inds]
+
+                X = np.concatenate((sample_c1,sample_c2),axis=0)
+
+                valid_attr_inds = np.arange(X.shape[1])
+                X_sub = X[:, valid_attr_inds]
+
+                #while there are still samples in X
+                while X_sub.size > 0:
+                    
+                    maxmin = np.max([np.min(sample_c1,axis=0),np.min(sample_c2,axis=0)],axis=0)
+                    minmax = np.min([np.max(sample_c1,axis=0),np.max(sample_c2,axis=0)],axis=0)
+
+                    feat_overlapped_region = np.logical_and(X_sub >= maxmin, X_sub <= minmax)
+
+                    feat_overlap_num = np.sum(feat_overlapped_region, axis=0)
+                    ind_less_overlap = np.argmin(feat_overlap_num)
+
+                    overlapped_region = feat_overlapped_region[:, ind_less_overlap]
+
+                    X = X[overlapped_region, :]
+                    sample_c1 = sample_c1[overlapped_region and c1_inds]
+                    sample_c2 = sample_c2[overlapped_region and c2_inds]
+
+                    valid_attr_inds = np.delete(valid_attr_inds, ind_less_overlap)
+                    X_sub = X[:, valid_attr_inds]
+
+                subset_size = X_sub.shape[0]
+
+                f4s.append(subset_size / (len(c1_inds) + len(c2_inds)))
+        return f4s
+
 
     def F4(self,imb=False):
         '''
