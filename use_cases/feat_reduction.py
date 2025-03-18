@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 f1_average = 'binary'
 
-folder = "dataset/"
+folder = "../dataset/"
 file = "creditCardFraud.arff"
 
 #Chose Classifier
