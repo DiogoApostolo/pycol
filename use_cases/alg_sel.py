@@ -29,7 +29,7 @@ def oversample(method,classifier,X_train,y_train,X_test,y_test,f1_average):
 
 
 #Load files with the datasets
-folder = "dataset/alg_sel/"
+folder = "../dataset/alg_sel/"
 onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f))]
 onlyfiles.sort(reverse=True)
 
