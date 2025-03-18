@@ -1,19 +1,20 @@
+
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
+
 from complexity import Complexity
 import numpy as np
 import xgboost as xgb
 import matplotlib.pyplot as plt
 
+f1_average = 'macro'
 
-f1_average = 'binary'
-
-folder = "../dataset/"
-file = "creditCardFraud.arff"
+folder = "dataset/alg_sel/"
+file = "segment0.arff"
 
 #Chose Classifier
-classifier = xgb.XGBClassifier()
-threshold = 0.60
+classifier = xgb.XGBClassifier(use_label_encoder=False,eval_metric='logloss')
+threshold = 0.90
 
 #Measure Feature Complexity
 complexity = Complexity(file_name=folder+file,distance_func="default",file_type="arff")
@@ -33,7 +34,7 @@ plt.show()
 X = complexity.X
 y = complexity.y
 
-X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.25,shuffle=True,stratify=y) 
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.10,shuffle=True,stratify=y) 
             
 
 classifier.fit(X_train, y_train)
@@ -56,6 +57,10 @@ classifier.fit(X_train_reduced, y_train)
 y_prob = classifier.predict_proba(X_test_reduced)
 y_pred = (y_prob[:,1] > 0.5).astype(int)        
 f1_reduced = f1_score(y_test, y_pred, zero_division=0,average=f1_average,pos_label=1)
+
+print("Features:", len(X[0]), "Performance:", f1_orig)
+print("Features:", len(features), "Performance:", f1_reduced)
+
 
 
 print(f1_orig)
