@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="DiogoApostolo">
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Use Cases - pycol</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">pycol</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">Use Cases</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../validation/" class="nav-link">Validation</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href=".." class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../validation/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://github.com/DiogoApostolo/pycol" class="nav-link">DiogoApostolo/pycol</a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#pycol-use-cases" class="nav-link">pycol: Use Cases</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#use-case-i-noise-removal" class="nav-link">Use Case I: Noise Removal</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#use-case-ii-guided-oversampling" class="nav-link">Use Case II: Guided Oversampling</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#use-case-iii-feature-selection" class="nav-link">Use Case III: Feature Selection</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#use-case-iv-algorithm-selection" class="nav-link">Use Case IV: Algorithm Selection</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#use-case-v-performance-benchmark" class="nav-link">Use Case V: Performance Benchmark</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="pycol-use-cases">pycol: Use Cases</h1>
+<h2 id="use-case-i-noise-removal">Use Case I: Noise Removal</h2>
+<p>One practical use case of pycol is noise removal, particularly following synthetic data generation techniques like SMOTE
+(Synthetic Minority Oversampling Technique). SMOTE often generates new instances randomly, which can result in synthetic
+points in regions with high class overlap, introducing noise. By leveraging pycol’s overlap measures, we can identify
+and remove these noisy synthetic instances. A scatter plot before and after noise removal can be obtained to see the results of the process (Figure xx).</p>
+<p><img alt="alt text" height="40%" src="https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/SMOTE-1.png?raw=true" width="40%" />
+<img alt="alt text" height="40%" src="https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/SMOTE-2.png?raw=true" width="40%" />
+<img alt="alt text" height="40%" src="https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/SMOTE-3.png?raw=true" width="40%" />
+<img alt="alt text" height="40%" src="https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/SMOTE-4.png?raw=true" width="40%" /></p>
+<p>Figure 1: Example of Noise Removal. The Minority Class is represented in Blue and the Majority Class is represented in Red. New minority samples (Dark Blue) are generated and removed according to their degree of overlap.</p>
+<h3 id="code-example">Code Example</h3>
+<p>A pratical example using pycol is shown using the breast cancer dataset.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">complexity</span> <span class="kn">import</span> <span class="n">Complexity</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span> <span class="nn">imblearn.over_sampling</span> <span class="kn">import</span> <span class="n">SMOTE</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">## Load Dataset##</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">dataset</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">X</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">data</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">y</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">target</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1">#Oversample</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">sm</span> <span class="o">=</span> <span class="n">SMOTE</span><span class="p">()</span> 
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">X_res</span><span class="p">,</span> <span class="n">y_res</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">fit_resample</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">dic</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span><span class="n">X_res</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span><span class="n">y_res</span><span class="p">}</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1">#Measure Complexity</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">complexity</span> <span class="o">=</span> <span class="n">Complexity</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dic</span><span class="p">,</span><span class="n">distance_func</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span><span class="n">file_type</span><span class="o">=</span><span class="s2">&quot;array&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">complexity_values</span> <span class="o">=</span> <span class="n">complexity</span><span class="o">.</span><span class="n">N3</span><span class="p">(</span><span class="n">inst_level</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1">#Remove noise: Find indexes of the new samples</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="n">original_samples_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">new_samples_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">original_samples_count</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_res</span><span class="p">))</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1">#Remove noise: Find indexes of the sample with low complexity</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="n">low_complexity_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">complexity_values</span><span class="o">&lt;</span><span class="mf">0.7</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c1">#Remove noise: Find the intersection of the two sets</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="n">intersect_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">low_complexity_inds</span><span class="p">,</span> <span class="n">new_samples_indexes</span><span class="p">)</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="c1">#Join original dataset with new samples </span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="n">union_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">union1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)),</span> <span class="n">intersect_array</span><span class="p">)</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="n">X_noise_removed</span> <span class="o">=</span> <span class="n">X_res</span><span class="p">[</span><span class="n">union_array</span><span class="p">,:]</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;% Reduction: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_noise_removed</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">X_res</span><span class="p">)))</span>
+</code></pre></div>
+<h2 id="use-case-ii-guided-oversampling">Use Case II: Guided Oversampling</h2>
+<p>Another valuable application is guided oversampling. Instead of applying a uniform oversampling strategy, we can use pycol to perform a more detailed oversampling based on the typology of safe, borderline, rare, and outlier instances, using the borderline metric. Specifically, pycol can be used to identify only one type of sample, for example the borderline samples, and use only these to generate new samples, instead of the entire dataset (Figure 2).</p>
+<p><img alt="alt text" height="30%" src="https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/guide-1.png?raw=true" width="30%" />
+<img alt="alt text" height="30%" src="https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/guide-2.png?raw=true" width="30%" />
+<img alt="alt text" height="30%" src="https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/guide-3.png?raw=true" width="30%" /></p>
+<p>Figure 2: Example of Guided Oversampling. The Minority Class is represented in Blue and the Majority Class is represented in Red. After the samples near the decision boundary are found, the dataset is oversampled using only these samples.</p>
+<h3 id="code-example_1">Code Example</h3>
+<p>A practical use case is shown using the winequality dataset from the KEEL repository. In this example we are interested in dividing the samples of the dataset into safe, borderline, rare and outlier. The following code example displays how to obtain this division with pycol by using the borderline complexity measure with the return_all parameter set to True:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">complexity</span> <span class="kn">import</span> <span class="n">Complexity</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">comp</span> <span class="o">=</span> <span class="n">Complexity</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;dataset/winequality_red_4.arff&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">B</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">O</span><span class="p">,</span><span class="n">C</span> <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">borderline</span><span class="p">(</span><span class="n">return_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">imb</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">O</span><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Sample Type</th>
+<th>Percentage Maj. Class</th>
+<th>Percentage Min. Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Safe</td>
+<td>0.9827</td>
+<td>0.000</td>
+</tr>
+<tr>
+<td>Borderline</td>
+<td>0.0173</td>
+<td>0.0943</td>
+</tr>
+<tr>
+<td>Rare</td>
+<td>0.0000</td>
+<td>0.2075</td>
+</tr>
+<tr>
+<td>Outlier</td>
+<td>0.000</td>
+<td>0.6982</td>
+</tr>
+</tbody>
+</table>
+<p>From these results, it is possible to observe that, for the minority class, there are many samples in the Outlier Class,
+specifically about 70%. Oversampling this dataset uniformly would create many samples in the overlapped area, due to the
+outlier samples. Performing oversampling just for borderline and rare samples in this case would be more beneficial, as it
+would give visibility to the minority class without drastically increasing the overlapped area.</p>
+<h2 id="use-case-iii-feature-selection">Use Case III: Feature Selection</h2>
+<p>Feature selection is critical for building efficient and interpretable models. Pycol can assist in this process by evaluating and ranking features based on their discriminative power using the feature metrics such as F1 or F1v. Using pycol’s complexity measures, we can assess each feature’s contribution to class separability and select the most relevant ones.</p>
+<p>A practical example is shown using an imbalanced credit card fraud detection dataset, from the OpenML repository. This dataset contains 30 features, and it is likely many of them can be removed without significantly losing classification performance. </p>
+<p>The goal is to pick the most discriminant features using the F1 overlap measure. Figure 3 shows all features plotted according to their discriminant power.</p>
+<p><img alt="alt text" src="https://github.com/DiogoApostolo/pycol/blob/new_main/docs/images/FeatureSelection.png?raw=true" /></p>
+<p>Figure 3: Discriminant Power of the Features of the credit card fraud Dataset</p>
+<p>As it is possible to observe that there are some features with low discriminant power (below 0.6), which can likely be removed from the dataset without losing too much performance.</p>
+<h3 id="code-example_2">Code Example</h3>
+<p>Using pycol we can do this by following this example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">train_test_split</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span> <span class="nn">complexity</span> <span class="kn">import</span> <span class="n">Complexity</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">f1_average</span> <span class="o">=</span> <span class="s1">&#39;binary&#39;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">folder</span> <span class="o">=</span> <span class="s2">&quot;dataset/&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;creditCardFraud.arff&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1">#Chose Classifier</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">classifier</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">XGBClassifier</span><span class="p">()</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.60</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1">#Measure Feature Complexity</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="n">complexity</span> <span class="o">=</span> <span class="n">Complexity</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">folder</span><span class="o">+</span><span class="n">file</span><span class="p">,</span><span class="n">distance_func</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span><span class="n">file_type</span><span class="o">=</span><span class="s2">&quot;arff&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="n">f1_list</span> <span class="o">=</span> <span class="n">complexity</span><span class="o">.</span><span class="n">F1</span><span class="p">()</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="n">my_dict</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s1">&#39;F</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f1_list</span><span class="p">)}</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1">#Show Bar Plot</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)),</span> <span class="nb">list</span><span class="p">(</span><span class="n">my_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)),</span> <span class="nb">list</span><span class="p">(</span><span class="n">my_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="c1">#Make Classification With the Full Dataset</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="n">X</span> <span class="o">=</span> <span class="n">complexity</span><span class="o">.</span><span class="n">X</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="n">y</span> <span class="o">=</span> <span class="n">complexity</span><span class="o">.</span><span class="n">y</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span> 
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="n">y_prob</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="n">y_pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_prob</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>        
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="n">f1_orig</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">average</span><span class="o">=</span><span class="n">f1_average</span><span class="p">,</span><span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="c1">#Choose Features above the threshold</span>
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="n">features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f1_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="c1">#Keep Only the relevant Features</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="n">X_train_reduced</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[:,</span><span class="n">features</span><span class="p">]</span>
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a><span class="n">X_test_reduced</span> <span class="o">=</span> <span class="n">X_test</span><span class="p">[:,</span><span class="n">features</span><span class="p">]</span>
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a>
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a>
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="c1">#Make Classification with the Reduced Dataset</span>
+<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_reduced</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a><span class="n">y_prob</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_reduced</span><span class="p">)</span>
+<a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a><span class="n">y_pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_prob</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>        
+<a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a><span class="n">f1_reduced</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">average</span><span class="o">=</span><span class="n">f1_average</span><span class="p">,</span><span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-2-59" name="__codelineno-2-59" href="#__codelineno-2-59"></a>
+<a id="__codelineno-2-60" name="__codelineno-2-60" href="#__codelineno-2-60"></a>
+<a id="__codelineno-2-61" name="__codelineno-2-61" href="#__codelineno-2-61"></a><span class="nb">print</span><span class="p">(</span><span class="n">f1_orig</span><span class="p">)</span>
+<a id="__codelineno-2-62" name="__codelineno-2-62" href="#__codelineno-2-62"></a><span class="nb">print</span><span class="p">(</span><span class="n">f1_reduced</span><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Number of Features</th>
+<th>Performance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Original Dataset</td>
+<td>30</td>
+<td>0.8833</td>
+</tr>
+<tr>
+<td>After Preprocessing</td>
+<td>21</td>
+<td>0.8633</td>
+</tr>
+</tbody>
+</table>
+<p>The results show that it's possible to use the F1 overlap measure for pre-processing, removing 9 features from the dataset without losing too much classification performance.</p>
+<h2 id="use-case-iv-algorithm-selection">Use Case IV: Algorithm Selection</h2>
+<p>Algorithm selection is a crucial step in the machine learning pipeline, where choosing the most suitable classification or preprocessing algorithm can significantly impact model performance. However, the effectiveness of an algorithm often depends on the underlying characteristics of the dataset, such as class imbalance and overlap. </p>
+<p>Pycol’s complexity measures can provide valuable insights into these characteristics, aiding in a more informed selection of an algorithm, through the use of meta learning. Particularly, by analysing a dataset with pycol, users can quantify aspects like class separability, feature interdependence, and sample density distribution. These insights help in predicting how different algorithms might perform.</p>
+<p>In the following practical example, we show how complexity metrics can be used to choose the most adequate preprocessing algorithm. The goal is to show how structural complexity, particularly, ONB, can be used as an indicator for the choice of preprocessing algorithm.</p>
+<p>To do this we measure overlap on 85 datasets from the KEEL repository and separate them into two groups, one with low structural complexity (ONB lower than 0.3) and one with very high structural complexity (ONB higher than 0.7). For both groups of datasets, several pre-processing techniques are applied, which can be divided into three groups. The first group composed of three oversampling algorithms, the most popular oversampling technique, SMOTE and two of its most popular variants Borderline SMOTE and SMOTE-ENN. Group two, contains two popular undersampling techniques, Random Undersampling (RUS) and Repeated Edited Nearest Neighbours (REEN). Finally, group three contains two oversampling techniques that take into account the structural properties of the dataset: Graph SMOTE and MWMOTE.</p>
+<p>Following this, the F-Measure of a kNN classifier is calculated on the original dataset and on the dataset after preprocessing, and the difference between these two values is calculated. </p>
+<h3 id="code-example_3">Code Example</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="kn">from</span> <span class="nn">complexity</span> <span class="kn">import</span> <span class="n">Complexity</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">join</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="kn">from</span> <span class="nn">imblearn.under_sampling</span> <span class="kn">import</span> <span class="n">RandomUnderSampler</span><span class="p">,</span> <span class="n">OneSidedSelection</span><span class="p">,</span><span class="n">RepeatedEditedNearestNeighbours</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="kn">from</span> <span class="nn">imblearn.over_sampling</span> <span class="kn">import</span> <span class="n">SMOTE</span><span class="p">,</span><span class="n">BorderlineSMOTE</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="kn">from</span> <span class="nn">imblearn.combine</span> <span class="kn">import</span> <span class="n">SMOTEENN</span><span class="p">,</span><span class="n">SMOTETomek</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="kn">import</span> <span class="nn">smote_variants</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="k">def</span> <span class="nf">oversample</span><span class="p">(</span><span class="n">method</span><span class="p">,</span><span class="n">classifier</span><span class="p">,</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">,</span><span class="n">f1_average</span><span class="p">):</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        <span class="n">sm</span> <span class="o">=</span> <span class="n">method</span><span class="p">()</span> 
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>        <span class="n">X_res</span><span class="p">,</span> <span class="n">y_res</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">fit_resample</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>        <span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_res</span><span class="p">,</span> <span class="n">y_res</span><span class="p">)</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        <span class="n">y_prob</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>        <span class="n">y_pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_prob</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>        
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>        <span class="n">f1</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">average</span><span class="o">=</span><span class="n">f1_average</span><span class="p">,</span><span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>        <span class="k">return</span> <span class="n">f1</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="c1">#Load files with the datasets</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="n">folder</span> <span class="o">=</span> <span class="s2">&quot;dataset/alg_sel/&quot;</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="n">onlyfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span> <span class="k">if</span> <span class="n">isfile</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">f</span><span class="p">))]</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="n">onlyfiles</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="c1">#Measure the complexity</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="n">onb_dic</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="n">dataset_dic</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">onlyfiles</span><span class="p">:</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>    <span class="n">complexity</span> <span class="o">=</span> <span class="n">Complexity</span><span class="p">(</span><span class="n">folder</span><span class="o">+</span><span class="n">file</span><span class="p">,</span><span class="n">distance_func</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span><span class="n">file_type</span><span class="o">=</span><span class="s2">&quot;arff&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>    <span class="n">onb_val</span> <span class="o">=</span> <span class="n">complexity</span><span class="o">.</span><span class="n">ONB</span><span class="p">(</span><span class="n">imb</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>    <span class="n">onb_dic</span><span class="p">[</span><span class="n">file</span><span class="p">]</span> <span class="o">=</span> <span class="n">onb_val</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>    <span class="n">dataset_dic</span><span class="p">[</span><span class="n">file</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">complexity</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">complexity</span><span class="o">.</span><span class="n">y</span><span class="p">]</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">onb_dic</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;ONB&#39;</span><span class="p">])</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a><span class="c1">#Select Classifier</span>
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a><span class="n">f1_average</span> <span class="o">=</span> <span class="s1">&#39;binary&#39;</span>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a><span class="n">knn</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a><span class="c1">#Select the values with high and low complexity</span>
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a><span class="n">difs_avg</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a><span class="n">good_bad_vals_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ONB&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.7</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ONB&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mf">0.3</span><span class="p">)]</span>
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a><span class="c1">#Balance the datasets - run N times</span>
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a><span class="n">max_versions</span> <span class="o">=</span> <span class="mi">10</span>
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a><span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">good_bad_vals_df</span><span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">]:</span>
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a>
+<a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>    <span class="n">smote_dif</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a>    <span class="n">rus_dif</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a>    <span class="n">reen_dif</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a>    <span class="n">enn_dif</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a>    <span class="n">border_dif</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-3-68" name="__codelineno-3-68" href="#__codelineno-3-68"></a>    <span class="n">gp_dif</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-3-69" name="__codelineno-3-69" href="#__codelineno-3-69"></a>    <span class="n">mw_dif</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-3-70" name="__codelineno-3-70" href="#__codelineno-3-70"></a>
+<a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a>    <span class="n">ONB_val</span> <span class="o">=</span> <span class="n">good_bad_vals_df</span><span class="p">[</span><span class="n">good_bad_vals_df</span><span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">dataset</span><span class="p">][</span><span class="s1">&#39;ONB&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-3-72" name="__codelineno-3-72" href="#__codelineno-3-72"></a>
+<a id="__codelineno-3-73" name="__codelineno-3-73" href="#__codelineno-3-73"></a>    <span class="k">for</span> <span class="n">version</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_versions</span><span class="p">):</span>
+<a id="__codelineno-3-74" name="__codelineno-3-74" href="#__codelineno-3-74"></a>
+<a id="__codelineno-3-75" name="__codelineno-3-75" href="#__codelineno-3-75"></a>        <span class="n">X</span> <span class="o">=</span> <span class="n">dataset_dic</span><span class="p">[</span><span class="n">dataset</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-3-76" name="__codelineno-3-76" href="#__codelineno-3-76"></a>        <span class="n">y</span> <span class="o">=</span> <span class="n">dataset_dic</span><span class="p">[</span><span class="n">dataset</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<a id="__codelineno-3-77" name="__codelineno-3-77" href="#__codelineno-3-77"></a>
+<a id="__codelineno-3-78" name="__codelineno-3-78" href="#__codelineno-3-78"></a>        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span> <span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">104</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span> 
+<a id="__codelineno-3-79" name="__codelineno-3-79" href="#__codelineno-3-79"></a>
+<a id="__codelineno-3-80" name="__codelineno-3-80" href="#__codelineno-3-80"></a>
+<a id="__codelineno-3-81" name="__codelineno-3-81" href="#__codelineno-3-81"></a>        <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-3-82" name="__codelineno-3-82" href="#__codelineno-3-82"></a>        <span class="n">y_prob</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<a id="__codelineno-3-83" name="__codelineno-3-83" href="#__codelineno-3-83"></a>        <span class="n">y_pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_prob</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>        
+<a id="__codelineno-3-84" name="__codelineno-3-84" href="#__codelineno-3-84"></a>        <span class="n">f1_orig</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">average</span><span class="o">=</span><span class="n">f1_average</span><span class="p">,</span><span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-3-85" name="__codelineno-3-85" href="#__codelineno-3-85"></a>
+<a id="__codelineno-3-86" name="__codelineno-3-86" href="#__codelineno-3-86"></a>        <span class="n">f1_smote</span> <span class="o">=</span> <span class="n">oversample</span><span class="p">(</span><span class="n">SMOTE</span><span class="p">,</span><span class="n">knn</span><span class="p">,</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">,</span><span class="n">f1_average</span><span class="p">)</span>
+<a id="__codelineno-3-87" name="__codelineno-3-87" href="#__codelineno-3-87"></a>        <span class="n">smote_dif</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f1_smote</span> <span class="o">-</span> <span class="n">f1_orig</span><span class="p">)</span>
+<a id="__codelineno-3-88" name="__codelineno-3-88" href="#__codelineno-3-88"></a>
+<a id="__codelineno-3-89" name="__codelineno-3-89" href="#__codelineno-3-89"></a>        <span class="n">f1_rus</span> <span class="o">=</span> <span class="n">oversample</span><span class="p">(</span><span class="n">RandomUnderSampler</span><span class="p">,</span><span class="n">knn</span><span class="p">,</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">,</span><span class="n">f1_average</span><span class="p">)</span>
+<a id="__codelineno-3-90" name="__codelineno-3-90" href="#__codelineno-3-90"></a>        <span class="n">rus_dif</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f1_rus</span> <span class="o">-</span> <span class="n">f1_orig</span><span class="p">)</span>
+<a id="__codelineno-3-91" name="__codelineno-3-91" href="#__codelineno-3-91"></a>
+<a id="__codelineno-3-92" name="__codelineno-3-92" href="#__codelineno-3-92"></a>        <span class="n">f1_reen</span> <span class="o">=</span> <span class="n">oversample</span><span class="p">(</span><span class="n">RepeatedEditedNearestNeighbours</span><span class="p">,</span><span class="n">knn</span><span class="p">,</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">,</span><span class="n">f1_average</span><span class="p">)</span>
+<a id="__codelineno-3-93" name="__codelineno-3-93" href="#__codelineno-3-93"></a>        <span class="n">reen_dif</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f1_reen</span> <span class="o">-</span> <span class="n">f1_orig</span><span class="p">)</span>
+<a id="__codelineno-3-94" name="__codelineno-3-94" href="#__codelineno-3-94"></a>
+<a id="__codelineno-3-95" name="__codelineno-3-95" href="#__codelineno-3-95"></a>        <span class="n">f1_smoteenn</span> <span class="o">=</span> <span class="n">oversample</span><span class="p">(</span><span class="n">SMOTEENN</span><span class="p">,</span><span class="n">knn</span><span class="p">,</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">,</span><span class="n">f1_average</span><span class="p">)</span>
+<a id="__codelineno-3-96" name="__codelineno-3-96" href="#__codelineno-3-96"></a>        <span class="n">enn_dif</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f1_smoteenn</span> <span class="o">-</span> <span class="n">f1_orig</span><span class="p">)</span>
+<a id="__codelineno-3-97" name="__codelineno-3-97" href="#__codelineno-3-97"></a>
+<a id="__codelineno-3-98" name="__codelineno-3-98" href="#__codelineno-3-98"></a>        <span class="n">f1_smoteborder</span> <span class="o">=</span> <span class="n">oversample</span><span class="p">(</span><span class="n">BorderlineSMOTE</span><span class="p">,</span><span class="n">knn</span><span class="p">,</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">,</span><span class="n">f1_average</span><span class="p">)</span>
+<a id="__codelineno-3-99" name="__codelineno-3-99" href="#__codelineno-3-99"></a>        <span class="n">border_dif</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f1_smoteborder</span> <span class="o">-</span> <span class="n">f1_orig</span><span class="p">)</span>
+<a id="__codelineno-3-100" name="__codelineno-3-100" href="#__codelineno-3-100"></a>
+<a id="__codelineno-3-101" name="__codelineno-3-101" href="#__codelineno-3-101"></a>        <span class="n">f1_graph</span> <span class="o">=</span> <span class="n">oversample</span><span class="p">(</span><span class="n">smote_variants</span><span class="o">.</span><span class="n">SL_graph_SMOTE</span><span class="p">,</span><span class="n">knn</span><span class="p">,</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">,</span><span class="n">f1_average</span><span class="p">)</span>
+<a id="__codelineno-3-102" name="__codelineno-3-102" href="#__codelineno-3-102"></a>        <span class="n">gp_dif</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f1_graph</span> <span class="o">-</span> <span class="n">f1_orig</span><span class="p">)</span>
+<a id="__codelineno-3-103" name="__codelineno-3-103" href="#__codelineno-3-103"></a>
+<a id="__codelineno-3-104" name="__codelineno-3-104" href="#__codelineno-3-104"></a>
+<a id="__codelineno-3-105" name="__codelineno-3-105" href="#__codelineno-3-105"></a>
+<a id="__codelineno-3-106" name="__codelineno-3-106" href="#__codelineno-3-106"></a>
+<a id="__codelineno-3-107" name="__codelineno-3-107" href="#__codelineno-3-107"></a>        <span class="n">f1_mw</span> <span class="o">=</span> <span class="n">oversample</span><span class="p">(</span><span class="n">smote_variants</span><span class="o">.</span><span class="n">MWMOTE</span><span class="p">,</span><span class="n">knn</span><span class="p">,</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">,</span><span class="n">f1_average</span><span class="p">)</span>
+<a id="__codelineno-3-108" name="__codelineno-3-108" href="#__codelineno-3-108"></a>        <span class="n">mw_dif</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f1_mw</span> <span class="o">-</span> <span class="n">f1_orig</span><span class="p">)</span>
+<a id="__codelineno-3-109" name="__codelineno-3-109" href="#__codelineno-3-109"></a>
+<a id="__codelineno-3-110" name="__codelineno-3-110" href="#__codelineno-3-110"></a>    <span class="c1">#Average the value for every run</span>
+<a id="__codelineno-3-111" name="__codelineno-3-111" href="#__codelineno-3-111"></a>    <span class="n">difs_avg</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">ONB_val</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">smote_dif</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rus_dif</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">reen_dif</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">enn_dif</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">border_dif</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">gp_dif</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mw_dif</span><span class="p">)])</span>
+<a id="__codelineno-3-112" name="__codelineno-3-112" href="#__codelineno-3-112"></a>
+<a id="__codelineno-3-113" name="__codelineno-3-113" href="#__codelineno-3-113"></a>
+<a id="__codelineno-3-114" name="__codelineno-3-114" href="#__codelineno-3-114"></a>
+<a id="__codelineno-3-115" name="__codelineno-3-115" href="#__codelineno-3-115"></a><span class="n">difs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">difs_avg</span><span class="p">),</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ONB&#39;</span><span class="p">,</span><span class="s1">&#39;SMOTE&#39;</span><span class="p">,</span><span class="s1">&#39;RUS&#39;</span><span class="p">,</span><span class="s1">&#39;REEN&#39;</span><span class="p">,</span><span class="s1">&#39;EEN&#39;</span><span class="p">,</span><span class="s1">&#39;Borderline&#39;</span><span class="p">,</span><span class="s1">&#39;GRAPH&#39;</span><span class="p">,</span><span class="s1">&#39;MWMOTE&#39;</span><span class="p">])</span>
+<a id="__codelineno-3-116" name="__codelineno-3-116" href="#__codelineno-3-116"></a>
+<a id="__codelineno-3-117" name="__codelineno-3-117" href="#__codelineno-3-117"></a><span class="c1">#Divide low and high complexity datasets</span>
+<a id="__codelineno-3-118" name="__codelineno-3-118" href="#__codelineno-3-118"></a><span class="n">low_metric_df</span> <span class="o">=</span> <span class="n">difs_df</span><span class="p">[</span><span class="n">difs_df</span><span class="p">[</span><span class="s1">&#39;ONB&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mf">0.3</span><span class="p">]</span>
+<a id="__codelineno-3-119" name="__codelineno-3-119" href="#__codelineno-3-119"></a><span class="n">high_metric_df</span> <span class="o">=</span> <span class="n">difs_df</span><span class="p">[</span><span class="n">difs_df</span><span class="p">[</span><span class="s1">&#39;ONB&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.7</span><span class="p">]</span>
+<a id="__codelineno-3-120" name="__codelineno-3-120" href="#__codelineno-3-120"></a>
+<a id="__codelineno-3-121" name="__codelineno-3-121" href="#__codelineno-3-121"></a><span class="nb">print</span><span class="p">(</span><span class="n">low_metric_df</span><span class="p">[[</span><span class="s1">&#39;SMOTE&#39;</span><span class="p">,</span><span class="s1">&#39;RUS&#39;</span><span class="p">,</span><span class="s1">&#39;REEN&#39;</span><span class="p">,</span><span class="s1">&#39;EEN&#39;</span><span class="p">,</span><span class="s1">&#39;Borderline&#39;</span><span class="p">,</span><span class="s1">&#39;GRAPH&#39;</span><span class="p">,</span><span class="s1">&#39;MWMOTE&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<a id="__codelineno-3-122" name="__codelineno-3-122" href="#__codelineno-3-122"></a><span class="nb">print</span><span class="p">(</span><span class="n">high_metric_df</span><span class="p">[[</span><span class="s1">&#39;SMOTE&#39;</span><span class="p">,</span><span class="s1">&#39;RUS&#39;</span><span class="p">,</span><span class="s1">&#39;REEN&#39;</span><span class="p">,</span><span class="s1">&#39;EEN&#39;</span><span class="p">,</span><span class="s1">&#39;Borderline&#39;</span><span class="p">,</span><span class="s1">&#39;GRAPH&#39;</span><span class="p">,</span><span class="s1">&#39;MWMOTE&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Oversampling algorithm</th>
+<th>SMOTE</th>
+<th>SMOTE-ENN</th>
+<th>Borderline</th>
+<th>RUS</th>
+<th>REEN</th>
+<th>Graph</th>
+<th>MWMOTE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ONB &lt; 0.3</td>
+<td>-0.009</td>
+<td>-0.0260</td>
+<td>-0.006</td>
+<td>-0.1648</td>
+<td>-0.0493</td>
+<td>-0.0310</td>
+<td>0.0090</td>
+</tr>
+<tr>
+<td>ONB &gt; 0.7</td>
+<td>0.1002</td>
+<td>0.1280</td>
+<td>0.1245</td>
+<td>0.0692</td>
+<td>0.1744</td>
+<td>0.1432</td>
+<td>0.1572</td>
+</tr>
+</tbody>
+</table>
+<p>From the results the following conclusions are presented:</p>
+<ol>
+<li>
+<p>For the datasets of low complexity, preprocessing does not show any improvement, on the contrary, in some cases it even shows a significant decrease;</p>
+</li>
+<li>
+<p>The datasets with high structural complexity, almost always benefit from pre-processing, however undersampling techniques such as RENN or oversampling techniques that take into account the structural properties of the dataset like Graph SMOTE and MWMOTE, tend to perform the best.</p>
+</li>
+</ol>
+<p>This type of analysis can be done for other measures of the structural family, which if coupled with measures from other families can offer an even more complete picture of the dataset characteristics and aid in the choice of both preprocessing and classification algorithms.</p>
+<h2 id="use-case-v-performance-benchmark">Use Case V: Performance Benchmark</h2>
+<p>Performance benchmarking involves comparing the effectiveness of different models or algorithms on a given dataset. Pycol can enhance this process by providing a detailed understanding of the dataset’s complexity, allowing for more nuanced benchmarking. When benchmarking models, it’s essential to consider not just the raw performance metrics (like accuracy, precision, recall) but also how these models interact with the inherent complexities of the dataset. Pycol enables this deeper analysis.</p>
+<p>This repository presents a csv file (Benchmark.csv) with complexity measurements for 85 binary datasets. In particular, this file showcases several datasets with different types of overlap complexity, with each measure containing two values when possible, one for each class (Example: the measure N3 will have N3_1 for the first class and N3_2 for the second). Based on these measurements, a user can choose the type of classifier that's more appropriate for each dataset. For example, datasets with low local complexity will yield better results with neighbourhood based classifiers like kNN.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
