@@ -21,12 +21,13 @@ Results for the first group of measures were compared with datasets of the KEEL 
 The results of the validation of the first group can be found in table bellow. All measures except from F1 and N2 obtain the exact same result in both packages for every dataset, indicating the implementation is indeed valid. As for F1, the difference in results is due to a slight change in the implementation where the means of each feature is not normalized, justifying variations between both approaches. Finally, for N2 the differences are also very small between the two packages, which is likely due to the default distance metrics used in each one of them, which are slightly different in terms of normalization.
 
 
-| Measure | pycol (newthyroid) | pymfe (newthyroid) | pycol (ecoli) | pymfe (ecoli) | pycol (balance) | pymfe (balance) | pycol (titanic) | pymfe (titanic) |
+| Measure | pycol (newthyroid) | pymfe (newthyroid) | pycol (ecoli) | pymfe (ecoli)| pycol (balance) | pymfe (balance) | pycol (titanic) | pymfe (titanic) |
 |---------|-------------------|--------------------|---------------|---------------|-----------------|-----------------|-----------------|------------------|
-| **F1**  | **0.5429**        | **0.5124**         | **0.5447**       | **0.5677**    | **0.8342**      | **0.8306**      | **0.8370**      | **0.9030**       |
-| F1v     | 0.0498            | 0.0498             | 0.1240        | 0.1240        | 0.2292          | 0.2292          | 0.4356          | 0.4356           |
-| F2      | 0.0005            | 0.0005             | 0.000         | 0.0000        | 1.000           | 1.0000          | 1.000           | 1.000            |
-| F3      | 0.1349            | 0.1349             | 0.9569        | 0.9569        | 0.5980          | 0.5980          | 1.000           | 1.000            |
+| **F1**  | **0.5429**        | **0.5124**         | **0.5447**    | **0.5677**    | **0.8342**      | **0.8306**      | **0.8370**      | **0.9030**       |
+| F1v     | 0.0613            | 0.0613             | 0.1186        | 0.1186        | 0.2904         | 0.2904          | 0.4356          | 0.4356           |
+| F2      | 0.0007            | 0.0007             | 0.000         | 0.0000        | 1.000           | 1.0000          | 1.000           | 1.000            |
+| F3      | 0.2216            | 0.2216             | 1.0           | 1.000         | 0.5980          | 0.5980          | 1.000           | 1.000            |
+| F4      | 0.0               | 0.0                | 0.0636        | 0.0636        | 1.0000          | 1.0000          | 1.000          | 1.000            |
 | N1      | 0.1023            | 0.1023             | 0.3035        | 0.3035        | 0.2752          | 0.2752          | 0.3198          | 0.3198           |
 | **N2**  | **0.2368**        | **0.2478**         | **0.4160**    | **0.3966**    | **0.4036**      | **0.4231**      | **0.0270**      | **0**            |
 | N3      | 0.0279            | 0.0279             | 0.2083        | 0.2083        | 0.2128          | 0.2128          | 0.2221          | 0.2221           |
@@ -44,7 +45,7 @@ from complexity import Complexity
 
 folder = "dataset/group_one/"
 onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f))]
-onlyfiles.sort(reverse=True)
+
 
 for file in onlyfiles:
     complexity = Complexity(folder+file,distance_func="default",file_type="arff")
@@ -59,6 +60,20 @@ for file in onlyfiles:
     n4_val = complexity.N4()
     lsc_val = complexity.LSC()
     t1_val = complexity.T1()
+
+    print(f1_val)
+    print(f1v_val)
+    print(f2_val)
+    print(f3_val)
+    print(f4_val)
+
+    print(n1_val)
+    print(n2_val)
+    print(n3_val)
+    print(n4_val)
+
+    print(lsc_val)
+    print(t1_val)
 ```
 
 
@@ -79,7 +94,7 @@ Ideally, if the complexity measures are implemented correctly, their values will
 | Measure       | Test 1   | Test 2   | Test 3   | Test 4   |
 |---------------|----------|----------|----------|----------|
 | **R value**   | 0.003    | 0.1140   | 0.2953   | 0.7107   |
-| **D3**        | [2,3]    | [89,82]  | [232,211]| [532,534]|
+| **D3**        | 2.5      | 85.5  | 221.5 | 533|
 | **CM**        | 0.003    | 0.114    | 0.2953   | 0.7106   |
 | **kDN**       | 0.0052   | 0.0957   | 0.2406   | 0.58413  |
 | **DBC**       | 0.7142   | 0.9672   |  0.9781   | 0.96268   |
@@ -153,14 +168,28 @@ folder = "dataset/group_two_part_one/"  ## "dataset/group_two_part_two/" change 
 onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f))]
 onlyfiles.sort(reverse=True)
 
-complexity = Complexity(folder+file,distance_func="default",file_type="arff")
+onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f))]
+
+for file in onlyfiles:
+
+    print(file)
+
+    complexity = Complexity(folder+file,distance_func="default",file_type="arff")
+    
+    
+
     R_val = complexity.R_value()
+    R_val = sum(R_val)/len(R_val)
+
     d3_val = complexity.D3_value()
+    d3_val = sum(d3_val)/len(d3_val) /100
     cm_val = complexity.CM()
     kdn_val = complexity.kDN()
     dbc_val = complexity.DBC()
     si_val = complexity.SI()
     in_val = complexity.input_noise()
+    in_val = sum(in_val)/len(in_val)
+
     borderline_val = complexity.borderline()
     deg_val = complexity.deg_overlap()
     C1_val = complexity.C2()
