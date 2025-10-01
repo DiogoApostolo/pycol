@@ -209,7 +209,7 @@ class Complexity:
 
 
     def __read_csv(self,dataset_name):
-        data = np.genfromtxt(dataset_name, delimiter=',', dtype=None, encoding=None)
+        data = pd.read_csv(dataset_name).to_numpy()
         
         #skip header start at 1
         X = data[1:,0:len(data[0])-1]
