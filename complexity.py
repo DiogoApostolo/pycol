@@ -8,11 +8,9 @@ from sklearn.calibration import LabelEncoder
 from sklearn.cluster import KMeans
 import sklearn
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import DistanceMetric
-import sklearn.pipeline
-import scipy.spatial
-import pandas as pd
 
+import pandas as pd
+from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 
 
@@ -22,7 +20,7 @@ from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-
+import scipy
 
 
 
@@ -263,7 +261,7 @@ class Complexity:
                 meta.append(1)
 
 
-        
+        self.feature_names = [att[i][0] for i in range(len(att)-1)]
 
 
 
@@ -3146,44 +3144,55 @@ class Complexity:
 
             # Create the bar plot
 
-            plt.title(key)
+            plt.title("Overlap Bar Plot")
             plt.ylabel('Overlap Value')
             plt.xlabel('Metric')
-            plt.bar(keys, values_mean, color=colors[color_inx])
+            plt.bar(keys, values_mean, color=colors[color_inx],label=key)
               
 
             color_inx+=1
+        
+        plt.ylim([0,1])
+        plt.legend()
         plt.show() 
 
-    def instance_hardness_viz(self,k=5):
+    def instance_hardness_viz(self,k=5,projection='tsne'):
         
         if(len(self.classes)>7):
             print("Can't represent more than 7 classes")
             return
 
-        
-        pca = PCA(n_components=2)
-        X_reduced = pca.fit_transform(self.X)
-        print(X_reduced)
+
+        if(projection=='tsne'):
+            tsne = TSNE(n_components=2, random_state=42)
+            X_reduced = tsne.fit_transform(self.X)
+        elif(projection=='pca'):
+            pca = PCA(n_components=2)
+            X_reduced = pca.fit_transform(self.X)
+        else:
+            print("Projection method not recognized. Use 'tsne' or 'pca'")
+            return
+       
 
         values = self.N3(k=k,inst_level=True)
-        print(values)
+        
         markers = ['o', '^', 's', 'P', 'D', 'X', '*']
-
+        scatter_array = []
+        
         for i in range(len(self.class_inxs)):
             c_inx = self.class_inxs[i]
-            print(c_inx)
             X_class =  X_reduced[c_inx,:]
             values_class = values[c_inx]
             scatter = plt.scatter(X_class[:,0], X_class[:,1], c=values_class, cmap='coolwarm', s=100, edgecolor='k', alpha=0.8,vmin=0, vmax=1,marker=markers[i])
-        
+            scatter_array.append(scatter)
 
         plt.colorbar(scatter, label='Gradient Value')
 
         # Label the axes
         plt.xlabel('Feature #1')
         plt.ylabel('Feature #2')
-        plt.title('Instance Hardness')
+        plt.title('Instance Hardness' + '(' + projection.upper() + ' Projection)')
+        plt.legend(tuple(scatter_array), ["Class " + str(x) for x in self.classes])
 
         # Show the plot
         plt.tight_layout()
